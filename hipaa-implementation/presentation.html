@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIPAA Implementation Playbook - Presentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="presentation-page">
+  <div class="presentation-container">
+    <header class="presentation-header">
+      <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Logo" class="logo" />
+      <div class="header-title">HIPAA Implementation Playbook</div>
+      <div class="slide-counter" id="slideCounter">Slide 1 / 20</div>
+    </header>
+
+    <div class="presentation-main">
+      <aside class="sidebar">
+        <!-- <h3>Navigation</h3>
+        <p class="sidebar-hint">Use ← → keys or click</p> -->
+        <nav class="slide-nav" id="slideNav">
+          <!-- Generated dynamically -->
+        </nav>
+      </aside>
+
+      <div class="slides-container">
+        <div class="slides" id="slides">
+          
+          <!-- Slide 1: Why HIPAA Matters -->
+          <section class="slide active" data-title="Why HIPAA Matters">
+            <h1>Why HIPAA Matters to Every Team Member</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Everyone Plays a Critical Role in Compliance</h2>
+                <p style="font-size: 18px;">HIPAA compliance isn't just an IT or legal issue—it's a shared responsibility across all teams. Here's why it matters to you.</p>
+              </div>
+
+              <div class="complete-checklist-grid" style="grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">👨‍💻</div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">Developers</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You build the technical safeguards: encryption, access controls, audit logs. Every line of code must protect PHI from unauthorized access and breaches.</p>
+                </div>
+
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">🧪</div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">QA Engineers</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You verify security controls work as intended. Test that PHI can't be accessed without proper authorization and ensure audit trails capture all activities.</p>
+                </div>
+
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">Product Managers</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You define features that handle PHI. Balance user experience with compliance requirements, ensure minimum necessary data collection, and prioritize security features.</p>
+                </div>
+
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">🎨</div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">Designers</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You create interfaces that protect patient privacy. Design clear consent flows, secure authentication UX, and prevent accidental PHI exposure in screenshots or demos.</p>
+                </div>
+
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">⚙️</div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">DevOps</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You manage infrastructure and deployments. Configure encrypted storage, secure networks, access controls, backup systems, and monitor for security incidents.</p>
+                </div>
+
+                <div class="checklist-card" style="padding: 32px;">
+                  <div class="checklist-number" style="font-size: 48px; margin-bottom: 16px;">🔧 </div>
+                  <h3 style="font-size: 24px; margin-bottom: 16px;">IT Admin / HR</h3>
+                  <p style="font-size: 16px; line-height: 1.6;">You manage workforce compliance. Conduct HIPAA training, enforce security policies, handle access provisioning/termination, and maintain training records.</p>
+                </div>
+              </div>
+
+              <div class="story-box" style="margin-top: 32px;">
+                <h3 style="font-size: 20px;">⚠️ Real World Example</h3>
+                <p style="font-size: 16px;">A healthcare startup left a test database publicly accessible with real patient names, addresses, and diagnoses. The breach involved failures across multiple teams: developers didn't secure the database, DevOps didn't restrict network access, QA didn't test security controls, and PM didn't prioritize security requirements.</p>
+                <p class="story-lesson" style="font-size: 16px;"><strong>Result:</strong> $3.5M fine, loss of customer trust, CEO resignation, and team layoffs. <strong>The lesson:</strong> One weak link can bring down the entire organization.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 2: HIPAA Basics -->
+          <section class="slide" data-title="HIPAA Basics">
+            <h1>HIPAA Fundamentals</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>What is HIPAA?</h2>
+                <p>The Health Insurance Portability and Accountability Act (1996) establishes national standards for protecting sensitive patient health information.</p>
+              </div>
+
+              <div class="three-rules">
+                <div class="rule-card">
+                  <div class="rule-icon">🔒</div>
+                  <h3>Privacy Rule</h3>
+                  <p>Controls <strong>who</strong> can access Protected Health Information (PHI) and <strong>when</strong>.</p>
+                  <ul>
+                    <li>Minimum necessary standard</li>
+                    <li>Patient rights to access</li>
+                    <li>Authorization requirements</li>
+                  </ul>
+                </div>
+                <div class="rule-card">
+                  <div class="rule-icon">🛡️</div>
+                  <h3>Security Rule</h3>
+                  <p>Defines <strong>how</strong> to protect PHI through technical safeguards.</p>
+                  <ul>
+                    <li>Access controls</li>
+                    <li>Encryption requirements</li>
+                    <li>Audit controls</li>
+                  </ul>
+                </div>
+                <div class="rule-card">
+                  <div class="rule-icon">📢</div>
+                  <h3>Breach Notification Rule</h3>
+                  <p>Procedures for reporting when PHI is compromised.</p>
+                  <ul>
+                    <li>60-day notification</li>
+                    <li>Affected individuals</li>
+                    <li>HHS reporting</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="phi-definition">
+                <h3>What is PHI (Protected Health Information)?</h3>
+                <div class="phi-grid">
+                  <div class="phi-item">✓ Names</div>
+                  <div class="phi-item">✓ Addresses</div>
+                  <div class="phi-item">✓ Birth dates</div>
+                  <div class="phi-item">✓ Phone numbers</div>
+                  <div class="phi-item">✓ Email addresses</div>
+                  <div class="phi-item">✓ SSN</div>
+                  <div class="phi-item">✓ Medical record numbers</div>
+                  <div class="phi-item">✓ Health plan numbers</div>
+                  <div class="phi-item">✓ Device identifiers</div>
+                  <div class="phi-item">✓ Biometric data</div>
+                  <div class="phi-item">✓ Photos of patients</div>
+                  <div class="phi-item">✓ Any unique ID</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 3: Complete Checklist Overview -->
+          <section class="slide" data-title="Complete Checklist">
+            <h1>HIPAA Developer Checklist - Complete Overview</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <p>12 essential items every developer must implement for HIPAA compliance.</p>
+              </div>
+
+              <div class="complete-checklist-grid">
+                <div class="checklist-card">
+                  <div class="checklist-number">1</div>
+                  <h3>Understand HIPAA Regulations</h3>
+                  <p>Know Privacy Rules, Security Rules, and Breach Notification requirements</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">2</div>
+                  <h3>Implement Access Controls</h3>
+                  <p>Authentication (passwords, MFA) and role-based access control (RBAC)</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">3</div>
+                  <h3>Data Encryption</h3>
+                  <p>Encrypt PHI at rest (AES-256) and in transit (TLS 1.2+)</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">4</div>
+                  <h3>Audit Trails</h3>
+                  <p>Log all PHI access: who, what, when, where, and why</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">5</div>
+                  <h3>Secure Development Practices</h3>
+                  <p>Code reviews, security testing (SAST/DAST), vulnerability scanning</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">6</div>
+                  <h3>Data Minimization</h3>
+                  <p>Collect and retain only minimum necessary PHI</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">7</div>
+                  <h3>Secure Transmission</h3>
+                  <p>Use HTTPS, TLS, VPNs for all data in transit</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">8</div>
+                  <h3>Business Associate Agreements</h3>
+                  <p>Sign BAAs with all vendors handling PHI (AWS, Zoom, etc.)</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">9</div>
+                  <h3>Disaster Recovery</h3>
+                  <p>Automated backups, geographically separated, tested restore plans</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">10</div>
+                  <h3>Employee Training</h3>
+                  <p>Annual HIPAA training for all staff handling PHI</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">11</div>
+                  <h3>Regular Security Assessments</h3>
+                  <p>Quarterly vulnerability scans, annual penetration testing</p>
+                </div>
+
+                <div class="checklist-card">
+                  <div class="checklist-number">12</div>
+                  <h3>Incident Response Plan</h3>
+                  <p>Documented plan: Detect → Contain → Investigate → Notify → Remediate</p>
+                </div>
+              </div>
+
+              <div class="key-points" style="margin-top: 32px;">
+                <h3>Next Steps</h3>
+                <ul>
+                  <li>We'll explore each item in detail with examples and interactive demos</li>
+                  <li>Focus on practical implementation in your daily development work</li>
+                  <li>Ask questions anytime during the presentation</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 4: Checklist Part 1 (Detailed) -->
+          <section class="slide" data-title="Checklist 1-4 Details">
+            <h1>Developer Checklist: Part 1 (Detailed)</h1>
+            <div class="slide-content checklist-content">
+              
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">1</span>
+                  <h2>Understand HIPAA Regulations</h2>
+                </div>
+                <p class="item-description">Developers must be familiar with Privacy Rules, Security Rules, and Breach Notification Rules. This understanding guides all development decisions.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> When building a health app, knowing that birth dates are PHI means you'll store them encrypted and limit access through role-based controls.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">2</span>
+                  <h2>Implement Access Controls</h2>
+                </div>
+                <p class="item-description">Restrict PHI access through authentication (passwords, MFA, biometrics) and role-based access control (RBAC).</p>
+                <div class="item-example">
+                  <strong>Example:</strong> A nurse can only view records for patients in their care unit. A doctor has broader access. A billing clerk sees only financial data, not clinical notes.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">3</span>
+                  <h2>Data Encryption</h2>
+                </div>
+                <p class="item-description">Transform data into coded form that requires a key to decrypt. Essential for protecting PHI both at rest (stored) and in transit (transmitted).</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Patient records in your database are encrypted with AES-256. If a hacker gains database access, they see only ciphertext without the encryption keys.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">4</span>
+                  <h2>Audit Trails</h2>
+                </div>
+                <p class="item-description">Track and record all PHI access and modifications. Logs must be immutable and include: who, what, when, and why.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Every time a user opens a patient file, log: timestamp, user ID, action type, patient ID, and access reason. Store logs securely for 6+ years.
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Slide 5: Checklist Part 2 (Detailed) -->
+          <section class="slide" data-title="Checklist 5-8 Details">
+            <h1>Developer Checklist: Part 2 (Detailed)</h1>
+            <div class="slide-content checklist-content">
+              
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">5</span>
+                  <h2>Secure Development Practices</h2>
+                </div>
+                <p class="item-description">Write code that minimizes vulnerabilities. Perform regular security testing including SAST, DAST, and penetration testing.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Use parameterized queries to prevent SQL injection. Implement Content Security Policy headers. Run OWASP ZAP scans before each release.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">6</span>
+                  <h2>Data Minimization</h2>
+                </div>
+                <p class="item-description">Collect and retain only the minimum necessary PHI for your intended purpose. Less data = less risk.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> If verifying age for prescription eligibility, ask for birth year only — not full birthdate, address, and SSN.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">7</span>
+                  <h2>Secure Transmission of Data</h2>
+                </div>
+                <p class="item-description">Encrypt all data transmitted over networks using TLS 1.2+ (HTTPS), VPNs, or secure file transfer protocols.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Mobile app submits patient vitals to your API. Use HTTPS with certificate pinning to prevent man-in-the-middle attacks.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">8</span>
+                  <h2>Business Associate Agreements (BAAs)</h2>
+                </div>
+                <p class="item-description">Contracts with vendors that handle PHI ensuring they'll safeguard it appropriately. Required by law.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Using AWS S3 for patient document storage? Sign AWS's BAA. Using Zoom for telehealth? Sign Zoom's BAA. No BAA = HIPAA violation.
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Slide 6: Checklist Part 3 (Detailed) -->
+          <section class="slide" data-title="Checklist 9-12 Details">
+            <h1>Developer Checklist: Part 3 (Detailed)</h1>
+            <div class="slide-content checklist-content">
+              
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">9</span>
+                  <h2>Disaster Recovery & Contingency Planning</h2>
+                </div>
+                <p class="item-description">Maintain plans for data backup, disaster recovery, and emergency operations to ensure PHI can be restored.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Automated daily backups to geographically separate location. Quarterly disaster recovery drills. Recovery Time Objective (RTO) of 4 hours.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">10</span>
+                  <h2>Employee Training & Awareness</h2>
+                </div>
+                <p class="item-description">Regular training for all employees who handle PHI. Document training completion and update annually.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Annual HIPAA training covering: recognizing PHI, secure communication, incident reporting, and penalties. New hires complete training before PHI access.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">11</span>
+                  <h2>Regular Security Assessments</h2>
+                </div>
+                <p class="item-description">Conduct periodic security audits and vulnerability assessments to identify and fix security issues proactively.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> Quarterly vulnerability scans. Annual penetration testing by third-party firm. Monthly dependency checks for vulnerable libraries.
+                </div>
+              </div>
+
+              <div class="checklist-item-detail">
+                <div class="item-header">
+                  <span class="item-number">12</span>
+                  <h2>Incident Response Plan</h2>
+                </div>
+                <p class="item-description">Documented plan for identifying, responding to, and mitigating security incidents involving PHI.</p>
+                <div class="item-example">
+                  <strong>Example:</strong> 1) Detect breach via monitoring. 2) Contain: isolate affected systems. 3) Investigate: determine scope. 4) Notify: individuals within 60 days. 5) Remediate: fix vulnerability.
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Slide 7: Access Control Demo Intro -->
+          <section class="slide" data-title="Access Control & Data Minimization">
+            <h1>Access Controls & Data Minimization</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Role-Based Access Control (RBAC) + Data Minimization</h2>
+                <p>RBAC assigns permissions based on user roles and enforces the principle of least privilege. Combined with data minimization, each role only accesses the minimum necessary PHI for their specific tasks.</p>
+              </div>
+
+              <div class="rbac-diagram" id="rbacDiagram">
+                <!-- Visualization will be inserted here -->
+              </div>
+
+              <div class="two-column">
+                <div class="column">
+                  <h3>Common Healthcare Roles</h3>
+                  <div class="role-list">
+                    <div class="role-item">
+                      <strong>Patient</strong>
+                      <p>View own records, request appointments, message providers</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>Nurse</strong>
+                      <p>View assigned patients (limited fields), update vitals, add notes</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>Doctor</strong>
+                      <p>Full access to patient records, prescribe medications, order tests</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>Admin</strong>
+                      <p>User management, system configuration, audit logs</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <h3>Implementation Principles</h3>
+                  <ul>
+                    <li><strong>Least Privilege:</strong> Grant minimum access needed</li>
+                    <li><strong>Data Minimization:</strong> Return only necessary fields per role</li>
+                    <li><strong>Separation of Duties:</strong> No single user has complete control</li>
+                    <li><strong>Need-to-Know:</strong> Access only when clinically necessary</li>
+                    <li><strong>Time-Limited:</strong> Temporary elevated permissions expire</li>
+                    <li><strong>Audit Trail:</strong> Log all access attempts and changes</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="story-box" style="margin-top: 24px;">
+                <h3>💡 Data Minimization in Practice</h3>
+                <p><strong>Example:</strong> A nurse checking patient age for medication dosage doesn't need the full date of birth (1985-03-22). Return only the birth year (1985) or calculated age (39 years). This reduces exposure if the session is compromised.</p>
+                <p style="margin-top: 12px;"><strong>Doctor viewing full medical history?</strong> Full DOB provided. <strong>Billing clerk processing invoice?</strong> Only age range needed, no DOB at all.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 8: Interactive Access Control Demo -->
+          <section class="slide" data-title="Access Control Demo">
+            <h1>Interactive Demo: Access Control & Data Minimization</h1>
+            <div class="slide-content">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+                <!-- Left Side: Controls -->
+                <div>
+                  <div class="demo-controls">
+                    <h3>Select a Role</h3>
+                    <div class="role-selector">
+                      <button class="role-btn" data-role="patient">Patient</button>
+                      <button class="role-btn" data-role="nurse">Nurse</button>
+                      <button class="role-btn active" data-role="doctor">Doctor</button>
+                      <button class="role-btn" data-role="admin">Admin</button>
+                    </div>
+                    <div class="current-role" id="currentRole">Current: Doctor</div>
+                  </div>
+
+                  <div class="demo-actions" style="margin-top: 24px;">
+                    <h3>Try These Actions</h3>
+                    <button class="action-btn" data-action="viewRecord">View Patient Record</button>
+                    <button class="action-btn" data-action="editRecord">Edit Patient Record</button>
+                    <button class="action-btn" data-action="prescribe">Prescribe Medication</button>
+                    <button class="action-btn" data-action="viewAudit">View Audit Logs</button>
+                    <button class="action-btn" data-action="deleteRecord">Delete Record</button>
+                  </div>
+                </div>
+
+                <!-- Right Side: Result -->
+                <div class="demo-result" id="accessResult" style="margin: 0;">
+                  <h3>Result</h3>
+                  <div class="result-content">Select a role and try an action</div>
+                </div>
+              </div>
+
+              <div class="code-example">
+                <h3>Implementation Example (Node.js)</h3>
+                <pre><code>// Middleware for role-based access with data minimization
+function requireRole(...allowedRoles) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    if (!allowedRoles.includes(req.user.role)) {
+      // Log failed access attempt
+      auditLog.record({
+        user: req.user.id,
+        action: 'ACCESS_DENIED',
+        resource: req.path,
+        timestamp: new Date()
+      });
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    
+    // Apply data minimization based on role
+    req.dataFields = getMinimumFields(req.user.role);
+    next();
+  };
+}
+
+function getMinimumFields(role) {
+  const fieldMap = {
+    'nurse': ['name', 'birthYear', 'age', 'mrn', 'diagnosis'],  // No full DOB
+    'doctor': ['name', 'dob', 'mrn', 'diagnosis', 'medications', 'allergies'],
+    'admin': ['userId', 'role', 'lastLogin']
+  };
+  return fieldMap[role] || [];
+}
+
+// Protected routes
+app.get('/api/patients/:id', 
+  requireRole('doctor', 'nurse'), 
+  patientController.getRecord);  // Returns only fields in req.dataFields</code></pre>
+              </div>
+
+              <div class="live-audit-log" id="liveAuditLog">
+                <h3>Live Audit Log</h3>
+                <div class="audit-entries"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 9: Encryption Concepts -->
+          <section class="slide" data-title="Encryption Concepts">
+            <h1>Data Encryption: At Rest & In Transit</h1>
+            <div class="slide-content">
+              <div class="encryption-types">
+                <div class="enc-card">
+                  <h2>Encryption at Rest</h2>
+                  <p>Protects stored data on disks, databases, and backups</p>
+                  <ul>
+                    <li>AES-256 for symmetric encryption</li>
+                    <li>Transparent Data Encryption (TDE)</li>
+                    <li>Full-disk encryption</li>
+                    <li>Application-level encryption</li>
+                  </ul>
+                </div>
+                <div class="enc-card">
+                  <h2>Encryption in Transit</h2>
+                  <p>Protects data moving across networks</p>
+                  <ul>
+                    <li>TLS 1.2+ for HTTPS</li>
+                    <li>Certificate pinning</li>
+                    <li>VPN tunnels</li>
+                    <li>SFTP for file transfers</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="encryption-flow">
+                <h3>Encryption Workflow</h3>
+                <div class="flow-diagram" id="encryptionFlow"></div>
+              </div>
+
+              <div class="best-practices">
+                <h3>Encryption Best Practices</h3>
+                <div class="practice-grid">
+                  <div class="practice">
+                    <strong>Key Management</strong>
+                    <p>Use dedicated key management services (AWS KMS, Azure Key Vault). Rotate keys regularly.</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Algorithm Choice</strong>
+                    <p>Use industry-standard algorithms: AES-256, RSA-2048+, SHA-256 or better.</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Never Roll Your Own</strong>
+                    <p>Use vetted libraries (OpenSSL, Crypto APIs). Custom encryption is vulnerable.</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Defense in Depth</strong>
+                    <p>Layer encryption with access controls, network segmentation, and monitoring.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 10: Interactive Encryption Demo -->
+          <section class="slide" data-title="Encryption Demo">
+            <h1>Interactive Demo: Encryption in Action</h1>
+            <div class="slide-content">
+              <div class="demo-container">
+                <div class="two-column" style="gap: 24px;">
+                  <div class="column">
+                    <h3>Plaintext PHI Data</h3>
+                    <textarea id="plainText" rows="4" style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-family: monospace;">Patient: Jane Smith
+DOB: 1985-03-22
+Diagnosis: Type 2 Diabetes
+Medication: Metformin 500mg</textarea>
+                    
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                      <button class="btn-primary" id="encryptBtn">🔒 Encrypt Data</button>
+                      <button class="control-btn" id="decryptBtn">🔓 Decrypt Data</button>
+                    </div>
+                  </div>
+                  
+                  <div class="column">
+                    <h3>Result</h3>
+                    <div id="cipherText" style="min-height: 150px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; font-size: 14px; word-break: break-all;">
+                      <em style="color: var(--text-muted);">Click "Encrypt Data" to see the encrypted result</em>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="content-block" style="margin-top: 32px;">
+                  <h3>Why This Matters</h3>
+                  <p>If a database backup is stolen or a laptop is lost, encrypted data remains protected. Without the encryption key (stored separately in a Key Management Service), the attacker sees only gibberish.</p>
+                  
+                  <div class="story-box" style="margin-top: 20px;">
+                    <h3>Real Example</h3>
+                    <p>A healthcare provider's unencrypted backup tapes were stolen from a courier's car. <strong>4.9 million</strong> patient records were exposed. Settlement: <strong>$5.5 million</strong>.</p>
+                    <p class="story-lesson">If those tapes had been encrypted, no breach notification would have been required.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 11: Audit Trails Deep Dive -->
+          <section class="slide" data-title="Audit Trails">
+            <h1>Audit Trails: Tracking Every Access</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>What to Log</h2>
+                <p>Every access or modification of PHI must be logged with immutable records.</p>
+              </div>
+
+              <div class="practice-grid" style="margin: 24px 0;">
+                <div class="practice">
+                  <strong>Who</strong>
+                  <p>User ID, name, role, IP address, session ID</p>
+                </div>
+                <div class="practice">
+                  <strong>What</strong>
+                  <p>Action performed (READ, WRITE, UPDATE, DELETE)</p>
+                </div>
+                <div class="practice">
+                  <strong>When</strong>
+                  <p>Timestamp (with timezone), duration</p>
+                </div>
+                <div class="practice">
+                  <strong>Where</strong>
+                  <p>Resource accessed (patient ID, record type)</p>
+                </div>
+              </div>
+
+              <div class="code-example">
+                <h3>Sample Audit Log Entry (JSON)</h3>
+                <pre><code>{
+  "timestamp": "2025-11-05T14:23:45.123Z",
+  "userId": "usr_12345",
+  "userRole": "doctor",
+  "action": "READ_PATIENT_RECORD",
+  "resourceType": "patient",
+  "resourceId": "patient_67890",
+  "ipAddress": "192.168.1.100",
+  "sessionId": "sess_abc123",
+  "outcome": "SUCCESS",
+  "metadata": {
+    "reason": "Annual checkup",
+    "department": "Cardiology"
+  }
+}</code></pre>
+              </div>
+
+              <div class="key-points" style="margin-top: 24px;">
+                <h3>Audit Log Requirements</h3>
+                <ul>
+                  <li><strong>Immutable:</strong> Logs cannot be edited or deleted by regular users</li>
+                  <li><strong>Retention:</strong> Store for minimum 6 years (check state laws)</li>
+                  <li><strong>Secure:</strong> Encrypt logs and restrict access to administrators</li>
+                  <li><strong>Monitoring:</strong> Alert on suspicious patterns (bulk downloads, after-hours access)</li>
+                  <li><strong>Regular Review:</strong> Periodic audits to detect policy violations</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 12: BAA Details -->
+          <section class="slide" data-title="Business Associate Agreements">
+            <h1>Business Associate Agreements (BAAs)</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>What is a BAA?</h2>
+                <p>A legally binding contract between a HIPAA covered entity and a vendor (business associate) that handles PHI. The BAA ensures the vendor will properly safeguard PHI.</p>
+              </div>
+
+              <div class="two-column" style="margin: 32px 0;">
+                <div class="column">
+                  <h3>Common Business Associates</h3>
+                  <div class="role-list">
+                    <div class="role-item">
+                      <strong>Cloud Providers</strong>
+                      <p>AWS, Azure, Google Cloud (when storing PHI)</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>SaaS Tools</strong>
+                      <p>CRM, analytics, email marketing with PHI</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>Telehealth</strong>
+                      <p>Zoom, Vonage, Twilio for patient communication</p>
+                    </div>
+                    <div class="role-item">
+                      <strong>Billing Services</strong>
+                      <p>Third-party medical billing companies</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="column">
+                  <h3>BAA Must Include</h3>
+                  <ul style="padding-left: 20px;">
+                    <li>Permitted uses of PHI</li>
+                    <li>Safeguard requirements</li>
+                    <li>Restriction on further disclosure</li>
+                    <li>Subcontractor requirements</li>
+                    <li>Breach notification obligations</li>
+                    <li>Return/destruction of PHI at termination</li>
+                    <li>Right to audit compliance</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="story-box">
+                <h3>⚠️ Warning: No BAA = HIPAA Violation</h3>
+                <p>Using a vendor without a BAA when they handle PHI is itself a HIPAA violation, even if no breach occurs.</p>
+                <p><strong>Example:</strong> A clinic used Google Analytics on their patient portal without a BAA. They were fined even though no breach happened, because sharing PHI with Google without a BAA violated HIPAA.</p>
+              </div>
+
+              <div style="margin-top: 40px; padding: 24px; background: #fff3cd; border-radius: 12px; border-left: 4px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 16px; font-size: 20px; font-weight: 700;">🤖 AI Models & AI Integrations</h3>
+                <p style="color: #856404; margin-bottom: 16px; font-size: 16px;">
+                  <strong>Critical Note:</strong> AI services that process PHI require BAAs just like any other vendor.
+                </p>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                  <h4 style="color: var(--brand-primary); margin-bottom: 12px; font-size: 18px;">AI Services Requiring BAAs:</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                      <strong style="color: var(--text-primary);">AI APIs:</strong>
+                      <ul style="margin-top: 8px; padding-left: 20px; color: var(--text-secondary);">
+                        <li>OpenAI API (GPT models)</li>
+                        <li>Anthropic (Claude API)</li>
+                        <li>Azure OpenAI Service</li>
+                        <li>AWS Bedrock</li>
+                        <li>Google Vertex AI</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <strong style="color: var(--text-primary);">Healthcare AI Tools:</strong>
+                      <ul style="margin-top: 8px; padding-left: 20px; color: var(--text-secondary);">
+                        <li>Medical imaging AI</li>
+                        <li>Clinical decision support</li>
+                        <li>AI chatbots for patients</li>
+                        <li>Predictive analytics platforms</li>
+                        <li>Natural language processing</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                  <h4 style="color: var(--danger); margin-bottom: 12px; font-size: 18px;">⚠️ Common AI Compliance Mistakes:</h4>
+                  <ul style="padding-left: 20px; color: var(--text-primary);">
+                    <li style="margin-bottom: 8px;"><strong>Using consumer AI tools with PHI:</strong> ChatGPT web interface, free Claude - NO BAA available, don't use with PHI</li>
+                    <li style="margin-bottom: 8px;"><strong>Sending PHI to AI APIs without BAAs:</strong> Even if using API (not web), you need a signed BAA</li>
+                    <li style="margin-bottom: 8px;"><strong>Training models on PHI:</strong> If vendor trains their models on your data, they need BAA + must commit to not using PHI for training</li>
+                    <li style="margin-bottom: 8px;"><strong>Third-party AI integrations:</strong> Embedded AI widgets, chatbots, or tools on your site need BAAs</li>
+                  </ul>
+                </div>
+
+                <div style="background: var(--brand-lighter); padding: 16px; border-radius: 8px;">
+                  <h4 style="color: var(--brand-primary); margin-bottom: 12px; font-size: 18px;">✅ AI BAA Best Practices:</h4>
+                  <ul style="padding-left: 20px; color: var(--text-primary);">
+                    <li style="margin-bottom: 8px;"><strong>Use enterprise/API versions:</strong> Azure OpenAI, AWS Bedrock offer BAAs (consumer versions don't)</li>
+                    <li style="margin-bottom: 8px;"><strong>Verify no training on your data:</strong> Ensure vendor doesn't use your PHI to improve their models</li>
+                    <li style="margin-bottom: 8px;"><strong>Data retention policies:</strong> How long does AI vendor keep your data? Should be minimal or zero</li>
+                    <li style="margin-bottom: 8px;"><strong>De-identify before sending:</strong> Remove/mask PHI before sending to AI if BAA unavailable</li>
+                    <li style="margin-bottom: 8px;"><strong>Audit AI access:</strong> Log what data is sent to AI services, track all API calls</li>
+                  </ul>
+                </div>
+
+                <div style="margin-top: 16px; padding: 12px; background: #dc3545; color: white; border-radius: 6px;">
+                  <p style="margin: 0; font-size: 15px; font-weight: 600;">
+                    ❌ NEVER paste PHI into ChatGPT, Claude web interface, or any consumer AI tool without a BAA. Use only enterprise API versions with signed BAAs.
+                  </p>
+                </div>
+              </div>
+
+              <div class="quiz-section" style="margin-top: 32px;">
+                <div id="baaQuiz"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 13: Disaster Recovery -->
+          <section class="slide" data-title="Disaster Recovery">
+            <h1>Disaster Recovery & Contingency Planning</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Business Continuity for Healthcare</h2>
+                <p>Healthcare systems must remain operational during emergencies. Patient care cannot stop.</p>
+              </div>
+
+              <div class="three-rules" style="margin: 32px 0;">
+                <div class="rule-card">
+                  <div class="rule-icon">💾</div>
+                  <h3>Data Backup</h3>
+                  <ul>
+                    <li>Automated daily backups</li>
+                    <li>Geographically separated storage</li>
+                    <li>Encrypted backups</li>
+                    <li>Regular restore testing</li>
+                  </ul>
+                </div>
+                <div class="rule-card">
+                  <div class="rule-icon">🔄</div>
+                  <h3>Disaster Recovery</h3>
+                  <ul>
+                    <li>RTO: Recovery Time Objective</li>
+                    <li>RPO: Recovery Point Objective</li>
+                    <li>Failover procedures</li>
+                    <li>Communication plan</li>
+                  </ul>
+                </div>
+                <div class="rule-card">
+                  <div class="rule-icon">📋</div>
+                  <h3>Contingency Plan</h3>
+                  <ul>
+                    <li>Emergency mode operations</li>
+                    <li>Alternative procedures</li>
+                    <li>Staff responsibilities</li>
+                    <li>Annual testing & updates</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="code-example">
+                <h3>Sample Backup Strategy</h3>
+                <pre><code>// Automated backup configuration
+const backupConfig = {
+  frequency: 'daily',
+  retentionDays: 90,
+  encryption: 'AES-256',
+  destinations: [
+    { type: 's3', bucket: 'hipaa-backups-primary', region: 'us-east-1' },
+    { type: 's3', bucket: 'hipaa-backups-dr', region: 'us-west-2' }
+  ],
+  verification: {
+    checksums: true,
+    testRestore: 'monthly'
+  },
+  alerts: {
+    onFailure: ['ops-team@hospital.com'],
+    onSuccess: ['backup-logs@hospital.com']
+  }
+};</code></pre>
+              </div>
+
+              <div class="key-points" style="margin-top: 24px;">
+                <h3>Best Practices</h3>
+                <ul>
+                  <li>3-2-1 Rule: 3 copies, 2 different media, 1 offsite</li>
+                  <li>Test restores quarterly (don't assume backups work)</li>
+                  <li>Document all procedures in a runbook</li>
+                  <li>Train staff on emergency procedures</li>
+                  <li>Review and update plan annually</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 14: Security Assessments -->
+          <section class="slide" data-title="Security Assessments">
+            <h1>Regular Security Assessments</h1>
+            <div class="slide-content">
+              <div class="content-block" style="margin-bottom: 24px;">
+                <h2>What it means in practice</h2>
+                <p style="font-size: 18px; line-height: 1.6;">Regular security assessments are the continuous checks we do to ensure our systems do not expose PHI. This is not just a once-a-year audit — it's <strong>daily/weekly/monthly activities</strong> that developers, QA, and DevOps do.</p>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 32px 0;">
+                <!-- Developers -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #5B7FDB; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #5B7FDB;">👨‍💻 Developers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">Static Code Analysis (SAST)</h4>
+                    <p style="margin: 0 0 8px 0; font-size: 14px; line-height: 1.5; color: #6c757d;">Run tools like SonarQube, Semgrep, OWASP Dependency Check, Snyk</p>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Hardcoded secrets</li>
+                      <li>SQL injection vulnerabilities</li>
+                      <li>Unsafe logging of PHI</li>
+                      <li>Insecure API endpoints</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Dev pushes code → CI pipeline runs SAST → 🔴 "Warning: Patient DOB logged in plain text in logs." → Developer fixes it before merge.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- QA -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #E85D75; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #E85D75;">🧪 QA</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">Security Test Cases</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>No PHI in logs, screenshots, console, crash reports</li>
+                      <li>RBAC enforced (nurse can't see doctor dashboard)</li>
+                      <li>API responds with 401/403 properly</li>
+                      <li>Test broken access control & IDOR</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> QA tries /patient/123 → changes to /patient/124 → If they get data → report as HIPAA breach risk.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- DevOps -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #00A9E0; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #00A9E0;">⚙️ DevOps</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">Infra Vulnerability Scans</h4>
+                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #6c757d;">AWS Inspector, Prisma Cloud, Nessus, Trivy</p>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>S3 buckets storing PHI are not public</li>
+                      <li>Databases have encryption at rest</li>
+                      <li>Security groups are least-privileged</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Trivy shows "PostgreSQL container vulnerable to CVE-XXXX" → DevOps schedules fix with developers.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- IT Admin -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #F5A623; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #F5A623;">🔧 IT Admin</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">Endpoint Security</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>MDM on laptops</li>
+                      <li>Patch management</li>
+                      <li>Access revocation for leaving employees</li>
+                      <li>Secure Wi-Fi / VPN for PHI access</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Developer has full local admin access → high risk → IT Admin ensures least privilege.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Designers -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #50C878; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #50C878;">🎨 Designers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">UX Security Decisions</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Don't display too much PHI on UI</li>
+                      <li>Avoid exposing PHI unnecessarily</li>
+                      <li>Sensitive screens auto-hide/timeout</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Designer ensures "Lab results screen" hides results when user is idle for 60 seconds.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- PMs -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #9B59B6; transition: transform 0.2s ease;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #9B59B6;">📋 PMs</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">Security Prioritization</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Ensure security bugs get sprint priority</li>
+                      <li>Compliance stories are never skipped</li>
+                      <li>Track HIPAA checklist as deliverables</li>
+                      <li>Keep documentation updated for auditors</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> PM adds security acceptance criteria: "No PHI should be logged" on every story.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 32px; text-align: center;">
+                <button onclick="openSecurityGallery()" style="
+                  padding: 14px 32px;
+                  font-size: 16px;
+                  font-weight: 600;
+                  color: white;
+                  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+                  transition: all 0.3s ease;
+                  ">
+                  📊 View Sample Security Reports
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 15: Incident Response Plan -->
+          <section class="slide" data-title="Incident Response">
+            <h1>Incident Response Plan</h1>
+            <div class="slide-content">
+              <div class="content-block" style="margin-bottom: 24px;">
+                <h2>What it means</h2>
+                <p style="font-size: 18px; line-height: 1.6;">An Incident Response Plan (IRP) defines what we do when something goes wrong: a breach, vulnerability, outage, misconfigured bucket, leaked PHI, etc.</p>
+              </div>
+
+              <div style="background: #f8f9fa; padding: 24px; border-radius: 12px; margin: 24px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 20px 0; color: var(--brand-primary); font-size: 22px;">The 6 Phases of Incident Response</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #007bff;">
+                    <div style="font-size: 24px; font-weight: 700; color: #007bff; margin-bottom: 4px;">1. Identify</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">Something suspicious is detected</p>
+                  </div>
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                    <div style="font-size: 24px; font-weight: 700; color: #dc3545; margin-bottom: 4px;">2. Contain</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">Stop the bleeding</p>
+                  </div>
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #fd7e14;">
+                    <div style="font-size: 24px; font-weight: 700; color: #fd7e14; margin-bottom: 4px;">3. Investigate</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">What, when, and how</p>
+                  </div>
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #28a745;">
+                    <div style="font-size: 24px; font-weight: 700; color: #28a745; margin-bottom: 4px;">4. Fix</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">Patch the vulnerability</p>
+                  </div>
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <div style="font-size: 24px; font-weight: 700; color: #ffc107; margin-bottom: 4px;">5. Notify</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">Users + regulators (within 60 days)</p>
+                  </div>
+                  <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #6f42c1;">
+                    <div style="font-size: 24px; font-weight: 700; color: #6f42c1; margin-bottom: 4px;">6. Improve</div>
+                    <p style="margin: 0; color: #6c757d; font-size: 14px;">Retrospective</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 32px 0;">
+                <!-- Developers -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #5B7FDB;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #5B7FDB;">👨‍💻 Developers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Fix the vulnerable code immediately</li>
+                      <li>Help identify what was exposed</li>
+                      <li>Provide logs/data for forensic team</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Dev notices in logs: "Returned entire patient list due to missing filter" → Reports it immediately → Helps patch API → Helps write post-mortem.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- QA -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #E85D75;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #E85D75;">🧪 QA Engineers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Reproduce the incident</li>
+                      <li>Validate the fix doesn't break other modules</li>
+                      <li>Add regression test cases</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> QA verifies that after the breach patch, no unauthorized user can view patient labs.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- DevOps -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #00A9E0;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #00A9E0;">🏗️ DevOps Engineers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Stop the exploitation</li>
+                      <li>Rotate credentials / API keys</li>
+                      <li>Restore from clean backups if needed</li>
+                      <li>Provide access logs for forensic investigation</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> S3 bucket accidentally made public → DevOps makes it private → rotates keys → checks logs → alerts the team.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- IT Admin -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #F5A623;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #F5A623;">🖥️ IT Admins</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Disable compromised accounts</li>
+                      <li>Investigate workstation malware</li>
+                      <li>Ensure laptops with PHI access are secure</li>
+                      <li>Work with HR & security team</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> Employee laptop stolen → IT Admin uses MDM → Remote wipe → Revoke access → Log incident.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Designers -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #50C878;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #50C878;">🎨 Designers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Validate UI does not leak PHI in screenshots, notifications, or error messages</li>
+                      <li>Fix UX flows that may lead to accidental exposure</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> An error popup mistakenly exposes a patient name → Designer updates components to mask PHI in errors.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- PMs -->
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #9B59B6;">
+                  <h3 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 700; color: #9B59B6;">🧑‍💼 Project Managers</h3>
+                  
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">What they do:</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #212529;">
+                      <li>Coordinate the incident response</li>
+                      <li>Communicate with leadership</li>
+                      <li>Track all remediation steps</li>
+                      <li>Ensure documentation for HIPAA audit</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="background: #fff3cd; padding: 16px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #856404; font-weight: 500;">
+                      <strong style="font-size: 16px;">Example:</strong> PM builds timeline: Detection → Containment → Fix → Communication → Retrospective and stores it in the compliance folder.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quiz-section" style="margin-top: 32px;">
+                <div id="incidentResponseQuiz"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 16: Employee Training -->
+          <section class="slide" data-title="Employee Training">
+            <h1>Employee Training & Awareness</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Human Factor in Security</h2>
+                <p>Most breaches involve human error. Training is your first line of defense.</p>
+              </div>
+
+              <div class="stats-grid" style="margin: 24px 0;">
+                <div class="stat-card">
+                  <div class="stat-number">82%</div>
+                  <div class="stat-label">Breaches involve human element</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">Annual</div>
+                  <div class="stat-label">Minimum training frequency</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">100%</div>
+                  <div class="stat-label">Staff must complete training</div>
+                </div>
+              </div>
+
+              <div class="content-block">
+                <h3>Training Topics to Cover</h3>
+                <div class="practice-grid">
+                  <div class="practice">
+                    <strong>HIPAA Basics</strong>
+                    <p>What is PHI, Privacy Rule, Security Rule, penalties</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Access Controls</strong>
+                    <p>Password hygiene, MFA, least privilege, screen locking</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Data Handling</strong>
+                    <p>Secure transmission, encryption, proper disposal</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Incident Reporting</strong>
+                    <p>How to recognize and report security incidents</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Phishing & Social Engineering</strong>
+                    <p>Recognizing attacks, verification procedures</p>
+                  </div>
+                  <div class="practice">
+                    <strong>Mobile Devices</strong>
+                    <p>BYOD policies, device encryption, remote wipe</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="key-points" style="margin-top: 24px;">
+                <h3>Training Requirements</h3>
+                <ul>
+                  <li>New employees: Before accessing PHI</li>
+                  <li>All employees: Annual refresher training</li>
+                  <li>After policy changes: Immediate training on updates</li>
+                  <li>Document completion: Keep records for 6+ years</li>
+                  <li>Test comprehension: Quizzes or assessments</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 17: Common Mistakes -->
+          <section class="slide" data-title="Common Mistakes">
+            <h1>Common HIPAA Mistakes to Avoid</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Learn from Others' Errors</h2>
+                <p>These are the most frequent compliance mistakes that lead to breaches and fines.</p>
+              </div>
+
+              <div class="practice-grid" style="margin: 32px 0;">
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Assuming Cloud = Compliant</strong>
+                  <p>Just because you use AWS or Azure doesn't mean you're HIPAA compliant. You must configure services correctly and sign a BAA.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Logging PHI in Plain Text</strong>
+                  <p>Application logs, error messages, and debug output often contain PHI. Use tokenization or redact sensitive data.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Using Tools Without BAA</strong>
+                  <p>Google Analytics, Intercom, Mixpanel on patient-facing sites without BAAs violates HIPAA.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Weak Access Controls</strong>
+                  <p>Shared passwords, no MFA, excessive permissions, no session timeouts.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Unencrypted Transmission</strong>
+                  <p>Sending PHI via regular email, SMS, or HTTP instead of encrypted channels.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ No Audit Logs</strong>
+                  <p>Not logging access to PHI or making logs editable by users.</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ Ignoring Updates</strong>
+                  <p>Running outdated software with known vulnerabilities (patch management failure).</p>
+                </div>
+                <div class="practice" style="border-left-color: var(--danger);">
+                  <strong>❌ No Employee Training</strong>
+                  <p>Assuming developers know HIPAA without formal training.</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 32px;">
+                <h2 style="margin-bottom: 24px;">Logging Examples with Winston</h2>
+                
+                <!-- Example 1: Error Logging -->
+                <div style="margin-bottom: 40px;">
+                  <h3 style="color: var(--danger); margin-bottom: 20px; font-size: 20px; font-weight: 700;">❌ BAD: Logging PHI in Plain Text</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden;">
+                      <div style="background: #2d2d30; color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">💻</span> Code
+                      </div>
+                      <pre style="margin: 0; border-radius: 0; border: none;"><code>const winston = require('winston');
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ 
+      filename: 'app.log' 
+    })
+  ]
+});
+
+// BAD: Exposing PHI
+logger.error(
+  `Failed to process patient ${patient.name}, 
+   SSN: ${patient.ssn}, 
+   DOB: ${patient.dob}`
+);</code></pre>
+                    </div>
+                    <div style="border: 2px solid var(--danger); border-radius: 10px; overflow: hidden;">
+                      <div style="background: var(--danger); color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">📄</span> Output in app.log
+                      </div>
+                      <pre style="margin: 0; background: #ffe6e6; border-left: none; border-radius: 0;"><code>error: Failed to process patient John Doe, 
+       SSN: 123-45-6789, 
+       DOB: 1980-05-15
+       
+⚠️ HIPAA VIOLATION: 
+PHI exposed in log files!</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Example 2: Good Logging with Redaction -->
+                <div style="margin-bottom: 40px;">
+                  <h3 style="color: var(--success); margin-bottom: 20px; font-size: 20px; font-weight: 700;">✅ GOOD: Redacted Logging</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden;">
+                      <div style="background: #2d2d30; color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">💻</span> Code
+                      </div>
+                      <pre style="margin: 0;"><code>const winston = require('winston');
+
+const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ 
+      filename: 'app.log' 
+    })
+  ]
+});
+
+// GOOD: Using patient ID only
+logger.error('Failed to process patient', {
+  patientId: patient.id,
+  userId: currentUser.id,
+  action: 'PROCESS_PATIENT',
+  errorCode: 'VALIDATION_ERROR'
+});</code></pre>
+                    </div>
+                    <div style="border: 2px solid var(--success); border-radius: 10px; overflow: hidden;">
+                      <div style="background: var(--success); color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">📄</span> Output in app.log
+                      </div>
+                      <pre style="margin: 0; background: #e6f7e6; border-left: none; border-radius: 0;"><code>{
+  "level": "error",
+  "message": "Failed to process patient",
+  "patientId": "pat_a1b2c3d4",
+  "userId": "usr_12345",
+  "action": "PROCESS_PATIENT",
+  "errorCode": "VALIDATION_ERROR",
+  "timestamp": "2025-11-12T10:23:45.123Z"
+}
+
+✓ COMPLIANT: No PHI exposed!</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Example 3: Custom Format with Sanitization -->
+                <div style="margin-bottom: 40px;">
+                  <h3 style="color: var(--brand-primary); margin-bottom: 20px; font-size: 20px; font-weight: 700;">✅ BETTER: Custom Format with Auto-Sanitization</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden;">
+                      <div style="background: #2d2d30; color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">💻</span> Code
+                      </div>
+                      <pre style="margin: 0; border-radius: 0; border: none;"><code>// Custom format to redact PHI fields
+const sanitizePHI = winston.format((info) => {
+  const phiFields = ['ssn', 'dob', 'name', 
+                     'email', 'phone'];
+  
+  phiFields.forEach(field => {
+    if (info[field]) {
+      info[field] = '[REDACTED]';
+    }
+  });
+  return info;
+});
+
+const logger = winston.createLogger({
+  format: winston.format.combine(
+    sanitizePHI(),
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ 
+      filename: 'app.log' 
+    })
+  ]
+});
+
+// Even if PHI passed, it gets redacted
+logger.info('Patient record accessed', {
+  patientId: 'pat_12345',
+  name: 'John Doe',  // Will be redacted
+  ssn: '123-45-6789', // Will be redacted
+  action: 'VIEW_RECORD'
+});</code></pre>
+                    </div>
+                    <div style="border: 2px solid var(--brand-primary); border-radius: 10px; overflow: hidden;">
+                      <div style="background: var(--brand-primary); color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">📄</span> Output in app.log
+                      </div>
+                      <pre style="margin: 0; background: var(--brand-lighter); border-left: none; border-radius: 0;"><code>{
+  "level": "info",
+  "message": "Patient record accessed",
+  "patientId": "pat_12345",
+  "name": "[REDACTED]",
+  "ssn": "[REDACTED]",
+  "action": "VIEW_RECORD",
+  "timestamp": "2025-11-12T10:23:45.123Z"
+}
+
+✓ COMPLIANT: Automatic PHI redaction!
+✓ Safe for debugging with IDs only</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Example 4: Using Debug Tokens -->
+                <div>
+                  <h3 style="color: var(--brand-primary); margin-bottom: 20px; font-size: 20px; font-weight: 700;">✅ BEST: Using Debug Tokens</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden;">
+                      <div style="background: #2d2d30; color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">💻</span> Code
+                      </div>
+                      <pre style="margin: 0;"><code>const crypto = require('crypto');
+
+// Generate debug token from patient ID
+function generateDebugToken(patientId) {
+  return crypto
+    .createHash('sha256')
+    .update(patientId + process.env.SECRET)
+    .digest('hex')
+    .substring(0, 12);
+}
+
+const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ 
+      filename: 'app.log' 
+    })
+  ]
+});
+
+// Use token for correlation without PHI
+const debugToken = generateDebugToken(
+  patient.id
+);
+
+logger.error('Database query failed', {
+  debugToken: debugToken,
+  query: 'SELECT * FROM patients',
+  errorCode: 'TIMEOUT'
+});</code></pre>
+                    </div>
+                    <div style="border: 2px solid var(--brand-primary); border-radius: 10px; overflow: hidden;">
+                      <div style="background: var(--brand-primary); color: #fff; padding: 10px 16px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 16px;">📄</span> Output in app.log
+                      </div>
+                      <pre style="margin: 0; background: var(--brand-lighter); border-left: none; border-radius: 0;"><code>{
+  "level": "error",
+  "message": "Database query failed",
+  "debugToken": "a7f3c2b89e4d",
+  "query": "SELECT * FROM patients",
+  "errorCode": "TIMEOUT",
+  "timestamp": "2025-11-12T10:23:45.123Z"
+}
+
+✓ COMPLIANT: No PHI exposed
+✓ Token allows issue correlation
+✓ Reversible only with SECRET key</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- How to Retrieve Data from Debug Token -->
+                <div style="margin-top: 40px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--brand-primary);">
+                  <h3 style="color: var(--brand-primary); margin-bottom: 16px; font-size: 18px; font-weight: 700;">🔑 How to Retrieve Data from Debug Token</h3>
+                  <p style="margin-bottom: 16px; font-size: 15px;">Debug tokens are <strong>one-way hashes</strong> - you cannot directly reverse them. Store a secure mapping to retrieve patient IDs when debugging:</p>
+                  
+                  <div style="margin-top: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: var(--shadow-md);">
+                      <h4 style="color: var(--brand-primary); margin-bottom: 16px; font-size: 16px;">Store Mapping in Secure Location</h4>
+                      <pre style="margin: 8px 0; font-size: 13px; padding: 16px;"><code>// Store mapping in encrypted database (separate from logs)
+const tokenMapping = {
+  'a7f3c2b89e4d': 'pat_002',
+  'b8e4d3c7a9f1': 'pat_005'
+};
+
+// Retrieve when needed
+function lookupPatientId(debugToken) {
+  return tokenMapping[debugToken];
+}
+
+// Usage during debugging
+const patientId = lookupPatientId('a7f3c2b89e4d');
+console.log(patientId); // 'pat_002'</code></pre>
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 16px; padding: 12px; background: var(--brand-lighter); border-radius: 6px;">
+                    <p style="font-size: 14px; margin: 0;"><strong>💡 Best Practice:</strong> Store the token-to-ID mapping in a <strong>separate encrypted database table</strong> with strict access controls. Only security/ops teams should have access. This way logs remain PHI-free, but you can still debug production issues when needed.</p>
+                  </div>
+
+                  <div style="margin-top: 16px; padding: 12px; background: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
+                    <p style="font-size: 14px; margin: 0; color: #856404;"><strong>⚠️ Security Note:</strong> The SECRET key in <code>process.env.SECRET</code> must be kept secure and rotated regularly. Without it, tokens cannot be regenerated to match against known IDs.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 18: PHI Quiz -->
+          <section class="slide" data-title="PHI Quiz">
+            <h1>Knowledge Check: PHI Identification</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <p>Test your understanding of what constitutes Protected Health Information.</p>
+              </div>
+              
+              <div class="quiz-section" style="margin-top: 32px;">
+                <div id="phiQuiz"></div>
+              </div>
+
+              <div class="content-block" style="margin-top: 48px;">
+                <h3>Understanding De-identified Data</h3>
+                <p>Data can be de-identified by removing 18 specific identifiers:</p>
+                <div class="phi-grid" style="margin-top: 16px;">
+                  <div class="phi-item">Names</div>
+                  <div class="phi-item">Geographic subdivisions smaller than state</div>
+                  <div class="phi-item">Dates (except year)</div>
+                  <div class="phi-item">Phone numbers</div>
+                  <div class="phi-item">Fax numbers</div>
+                  <div class="phi-item">Email addresses</div>
+                  <div class="phi-item">SSN</div>
+                  <div class="phi-item">Medical record numbers</div>
+                  <div class="phi-item">Health plan numbers</div>
+                  <div class="phi-item">Account numbers</div>
+                  <div class="phi-item">Certificate/license numbers</div>
+                  <div class="phi-item">Vehicle identifiers</div>
+                  <div class="phi-item">Device IDs/serial numbers</div>
+                  <div class="phi-item">URLs</div>
+                  <div class="phi-item">IP addresses</div>
+                  <div class="phi-item">Biometric identifiers</div>
+                  <div class="phi-item">Photos</div>
+                  <div class="phi-item">Any unique identifier</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 19: Best Practices Quiz -->
+          <section class="slide" data-title="Best Practices Quiz">
+            <h1>Knowledge Check: Best Practices</h1>
+            <div class="slide-content">
+              <div class="quiz-section">
+                <div id="bestPracticesQuiz"></div>
+              </div>
+
+              <div class="quiz-section" style="margin-top: 48px;">
+                <div id="accessControlQuiz"></div>
+              </div>
+
+              <div class="content-block" style="margin-top: 48px;">
+                <h3>Key Takeaways</h3>
+                <div class="key-points">
+                  <ul>
+                    <li>Always encrypt PHI at rest and in transit</li>
+                    <li>Implement the principle of least privilege</li>
+                    <li>Log all access to PHI with audit trails</li>
+                    <li>Sign BAAs with every vendor handling PHI</li>
+                    <li>Train employees regularly on HIPAA compliance</li>
+                    <li>Test your disaster recovery plan</li>
+                    <li>Have an incident response plan ready</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 20: Breach Statistics -->
+          <section class="slide" data-title="Breach Statistics">
+            <h1>Healthcare Breach Trends</h1>
+            <div class="slide-content">
+              <div class="content-block">
+                <h2>Understanding the Threat Landscape</h2>
+                <p>Healthcare continues to be the most targeted industry for cyberattacks.</p>
+              </div>
+
+              <div id="breachChart" style="margin: 32px 0;"></div>
+
+              <div class="stats-grid" style="margin: 32px 0;">
+                <div class="stat-card">
+                  <div class="stat-number">$408</div>
+                  <div class="stat-label">Per record breach cost (healthcare)</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">89 days</div>
+                  <div class="stat-label">Average time to identify breach</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">$9.77M</div>
+                  <div class="stat-label">Average total breach cost</div>
+                </div>
+              </div>
+
+              <div class="two-column" style="margin: 32px 0;">
+                <div class="column">
+                  <h3>Common Attack Vectors</h3>
+                  <ul>
+                    <li>Phishing attacks (25%)</li>
+                    <li>Ransomware (24%)</li>
+                    <li>Insider threats (20%)</li>
+                    <li>Third-party breaches (15%)</li>
+                    <li>Unpatched vulnerabilities (10%)</li>
+                    <li>Lost/stolen devices (6%)</li>
+                  </ul>
+                </div>
+                <div class="column">
+                  <h3>Defense Strategies</h3>
+                  <ul>
+                    <li>Security awareness training</li>
+                    <li>Multi-factor authentication</li>
+                    <li>Regular vulnerability scanning</li>
+                    <li>Vendor risk management</li>
+                    <li>Patch management program</li>
+                    <li>Device encryption & MDM</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 21: Final Assessment -->
+          <section class="slide" data-title="Final Assessment">
+            <h1>Final Assessment & Next Steps</h1>
+            <div class="slide-content">
+              <div id="finalAssessment"></div>
+
+              <div class="content-block" style="margin-top: 48px;">
+                <h2>Additional Resources</h2>
+                <div class="practice-grid">
+                  <div class="practice">
+                    <strong>HHS HIPAA Website</strong>
+                    <p>hhs.gov/hipaa - Official guidance and regulations</p>
+                  </div>
+                  <div class="practice">
+                    <strong>NIST Cybersecurity Framework</strong>
+                    <p>nist.gov/cyberframework - Security best practices</p>
+                  </div>
+                  <div class="practice">
+                    <strong>OWASP Top 10</strong>
+                    <p>owasp.org - Web application security</p>
+                  </div>
+                  <div class="practice">
+                    <strong>HITRUST Alliance</strong>
+                    <p>hitrustalliance.net - Healthcare security framework</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="key-points" style="margin-top: 32px;">
+                <h3>Action Items</h3>
+                <ul>
+                  <li>✓ Review your application for HIPAA compliance gaps</li>
+                  <li>✓ Verify all vendors have signed BAAs</li>
+                  <li>✓ Implement encryption for PHI at rest and in transit</li>
+                  <li>✓ Set up comprehensive audit logging</li>
+                  <li>✓ Schedule regular security assessments</li>
+                  <li>✓ Create/update incident response plan</li>
+                  <li>✓ Conduct team HIPAA training</li>
+                </ul>
+              </div>
+
+              <div class="story-box" style="background: var(--brand-lighter); border-color: var(--brand-primary);">
+                <h3>🎯 Remember</h3>
+                <p style="color: var(--text-primary);">HIPAA compliance is not a one-time checklist—it's an ongoing commitment to protecting patient privacy and security. Every line of code you write has the potential to protect or expose sensitive health information.</p>
+                <p style="color: var(--text-primary); margin-top: 16px;"><strong>Build with security in mind. Always.</strong></p>
+              </div>
+
+              <div style="text-align: center; margin-top: 48px;">
+                <h2>Thank You!</h2>
+                <p style="font-size: 18px; color: var(--text-secondary); margin-top: 16px;">
+                  Questions? Review the slides anytime or refer to the resources provided.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Thank You Slide -->
+          <section class="slide" data-title="Thank You">
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; min-height: 70vh; text-align: center;">
+              <div style="max-width: 800px;">
+                <div style="margin-bottom: 32px;">
+                  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto;">
+                    <circle cx="60" cy="60" r="55" stroke="var(--brand-primary)" stroke-width="6" opacity="0.3"/>
+                    <path d="M40 55L52 67L80 39" stroke="var(--brand-primary)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="60" cy="60" r="58" stroke="var(--brand-primary)" stroke-width="2" opacity="0.5"/>
+                  </svg>
+                </div>
+
+                <h1 style="font-size: 56px; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">Thank You!</h1>
+                
+                <p style="font-size: 24px; color: var(--text-secondary); margin-bottom: 32px; line-height: 1.6;">
+                  We appreciate your time and attention in this<br>HIPAA Implementation Playbook session
+                </p>
+
+                <div style="background: var(--brand-lighter); padding: 32px; border-radius: 16px; margin: 48px 0; border: 2px solid var(--brand-primary);">
+                  <h2 style="color: var(--brand-primary); margin-bottom: 16px; font-size: 28px;">📝 Your Feedback Matters</h2>
+                  <p style="font-size: 18px; color: var(--text-primary); line-height: 1.7;">
+                    Help us improve this training session!<br>
+                    <strong>A feedback link will be shared with you after the session.</strong><br>
+                    Your insights and suggestions are valuable to us.
+                  </p>
+                </div>
+
+                <div style="margin-top: 48px;">
+                  <p style="font-size: 32px; color: var(--text-primary); margin-bottom: 16px; font-weight: 700;">
+                    Any Questions?
+                  </p>
+                  <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
+                    Please feel free to ask
+                  </p>
+                </div>
+
+                <div style="margin-top: 48px; padding-top: 32px; border-top: 2px solid var(--border-color);">
+                  <p style="font-size: 16px; color: var(--text-muted);">
+                    Crafted with care by Rahul Dudhane
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+        </div>
+
+        <div class="slide-controls">
+          <button class="control-btn" id="prevSlide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Previous
+          </button>
+          <button class="control-btn" id="nextSlide">
+            Next
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Screen Image Gallery Modal -->
+  <div id="securityGalleryModal" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+  ">
+    <!-- Close Button -->
+    <div style="
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10001;
+      transition: color 0.3s ease;
+    " onclick="closeSecurityGallery()" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='white'">
+      &times;
+    </div>
+
+    <!-- Image Counter -->
+    <div id="imageCounter" style="
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      z-index: 10001;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 20px;
+      border-radius: 20px;
+    ">
+      1 / 5
+    </div>
+
+    <!-- Zoom Controls -->
+    <div style="
+      position: absolute;
+      top: 30px;
+      right: 80px;
+      display: flex;
+      gap: 8px;
+      z-index: 10001;
+    ">
+      <button onclick="zoomOut()" title="Zoom Out" style="
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        −
+      </button>
+      <button onclick="resetZoom()" title="Reset Zoom" style="
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        font-size: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        <span id="zoomLevel">100%</span>
+      </button>
+      <button onclick="zoomIn()" title="Zoom In" style="
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        +
+      </button>
+    </div>
+
+    <!-- Image Container -->
+    <div id="imageContainer" style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 80px 120px;
+      position: relative;
+      overflow: auto;
+      cursor: grab;
+    ">
+      <img id="galleryImage" src="" alt="Security Report" style="
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+      ">
+    </div>
+
+    <!-- Previous Button -->
+    <button id="prevBtn" onclick="previousImage()" style="
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
+      color: white;
+      font-size: 24px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+      ‹
+    </button>
+
+    <!-- Next Button -->
+    <button id="nextBtn" onclick="nextImage()" style="
+      position: absolute;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
+      color: white;
+      font-size: 24px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+      ›
+    </button>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    #galleryImage {
+      transition: opacity 0.3s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4) !important;
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+
+    #prevBtn:hover, #nextBtn:hover {
+      transform: translateY(-50%) scale(1.1) !important;
+    }
+  </style>
+
+  <script>
+    // Gallery images from the images folder
+    const galleryImages = [
+      'images/sonar-dashboard.png',
+      'images/trivy dashboard.png',
+      'images/prowler-dashboard.png',
+      'images/zap-dashboard.png',
+      'images/EQi-dashboard-dev.png'
+    ];
+
+    let currentImageIndex = 0;
+    let currentZoom = 1;
+    const zoomStep = 0.25;
+    const minZoom = 0.5;
+    const maxZoom = 3;
+
+    function openSecurityGallery() {
+      const modal = document.getElementById('securityGalleryModal');
+      currentImageIndex = 0;
+      currentZoom = 1;
+      updateGalleryImage();
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSecurityGallery() {
+      const modal = document.getElementById('securityGalleryModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      resetZoom();
+    }
+
+    function updateGalleryImage() {
+      const img = document.getElementById('galleryImage');
+      const counter = document.getElementById('imageCounter');
+      
+      // Reset zoom when changing images
+      currentZoom = 1;
+      updateZoomDisplay();
+      
+      // Fade out
+      img.style.opacity = '0';
+      
+      setTimeout(() => {
+        img.src = galleryImages[currentImageIndex];
+        counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+        
+        // Fade in
+        img.style.opacity = '1';
+      }, 150);
+    }
+
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      updateGalleryImage();
+    }
+
+    function previousImage() {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateGalleryImage();
+    }
+
+    function zoomIn() {
+      if (currentZoom < maxZoom) {
+        currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+        updateZoomDisplay();
+      }
+    }
+
+    function zoomOut() {
+      if (currentZoom > minZoom) {
+        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+        updateZoomDisplay();
+      }
+    }
+
+    function resetZoom() {
+      currentZoom = 1;
+      updateZoomDisplay();
+    }
+
+    function updateZoomDisplay() {
+      const img = document.getElementById('galleryImage');
+      const zoomLevel = document.getElementById('zoomLevel');
+      const container = document.getElementById('imageContainer');
+      
+      img.style.transform = `scale(${currentZoom})`;
+      zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+      
+      // Update cursor based on zoom
+      if (currentZoom > 1) {
+        container.style.cursor = 'move';
+      } else {
+        container.style.cursor = 'grab';
+      }
+    }
+
+    // Mouse wheel zoom
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('imageContainer');
+      if (container) {
+        container.addEventListener('wheel', function(e) {
+          const modal = document.getElementById('securityGalleryModal');
+          if (modal.style.display === 'block') {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+              zoomIn();
+            } else {
+              zoomOut();
+            }
+          }
+        }, { passive: false });
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('securityGalleryModal');
+      if (modal.style.display === 'block') {
+        if (e.key === 'Escape') {
+          closeSecurityGallery();
+        } else if (e.key === 'ArrowRight') {
+          nextImage();
+        } else if (e.key === 'ArrowLeft') {
+          previousImage();
+        } else if (e.key === '+' || e.key === '=') {
+          zoomIn();
+        } else if (e.key === '-' || e.key === '_') {
+          zoomOut();
+        } else if (e.key === '0') {
+          resetZoom();
+        }
+      }
+    });
+  </script>
+
+  <script src="presentation.js"></script>
+  <script src="demos.js"></script>
+  <script src="visualizations.js"></script>
+  <script src="quiz.js"></script>
+</body>
+</html>
+
