@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Healthcare Market Overview - Advanced Guide</title>
+  <link rel="icon" type="image/png" href="https://www.mindbowser.com/wp-content/uploads/2025/10/512x512-1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+  <script src="https://code.highcharts.com/modules/sankey.js"></script>
+  <script src="https://code.highcharts.com/modules/organization.js"></script>
+  <style>
+    :root {
+      /* Brand Colors */
+      --brand-primary: #7133AE;
+      --brand-secondary: #5d2a90;
+      --brand-accent: #38b8b3;
+      --brand-light: rgba(113, 51, 174, 0.18);
+      
+      /* Dark Theme (Default) */
+      --bg-landing: #1a1e2e;
+      --bg-1: #0b0713;
+      --bg-2: #150f22;
+      --text-main: rgba(255, 255, 255, 0.9);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --sidebar-bg: rgba(15, 10, 25, 0.98);
+      --header-bg: rgba(15, 10, 25, 0.98);
+      --table-header: rgba(113, 51, 174, 0.2);
+      --logo-filter: none;
+      --theme-btn-bg: rgba(255, 255, 255, 0.1);
+      --theme-btn-hover: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="light"] {
+      /* Light Theme */
+      --bg-landing: #e2e8f0;
+      --bg-1: #ffffff;
+      --bg-2: #f1f5f9; /* Distinct contrasting section */
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --sidebar-bg: #f8fafc;
+      --header-bg: #ffffff;
+      --table-header: rgba(113, 51, 174, 0.15);
+      --logo-filter: invert(1) hue-rotate(180deg);
+      --theme-btn-bg: rgba(0, 0, 0, 0.05);
+      --theme-btn-hover: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-1);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* --- Landing Page --- */
+    #landing-page {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-landing);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    .landing-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+    }
+
+    .landing-logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+
+    .landing-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .landing-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #fff;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(113, 51, 174, 0.4);
+    }
+
+    .landing-features {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 64px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .landing-features span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* --- App Layout --- */
+    #app-layout {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    #app-layout.active {
+      display: flex;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .header .logo {
+      height: 24px;
+      filter: var(--logo-filter);
+      transition: filter 0.3s ease;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: var(--theme-btn-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--theme-btn-hover);
+    }
+
+    .layout-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      position: fixed;
+      top: 60px; bottom: 0; left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .sidebar h4 {
+      color: var(--brand-primary);
+      margin: 0 0 16px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+    [data-theme="dark"] .sidebar a:hover, [data-theme="dark"] .sidebar a.active {
+      color: #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Alternating Sections */
+    .section {
+      padding: 64px 80px;
+      scroll-margin-top: 60px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section.bg-1 { background-color: var(--bg-1); }
+    .section.bg-2 { background-color: var(--bg-2); }
+    
+    .section-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Section Headers */
+    .section-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+    
+    .subsection-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 32px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Prominent Dark Content Boxes (Black section for visibility) */
+    .content-box {
+      background: #140d21; /* Enforced dark background for readability */
+      color: #f1f5f9; /* Light text */
+      border: 1px solid rgba(113, 51, 174, 0.4);
+      border-left: 4px solid var(--brand-accent);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .content-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(113, 51, 174, 0.2);
+    }
+
+    .content-box h3 { color: #ffffff; }
+    .content-box p { line-height: 1.7; margin-bottom: 16px; color: #e2e8f0; }
+    .content-box ul { padding-left: 20px; line-height: 1.7; color: #e2e8f0; }
+    .content-box li { margin-bottom: 10px; }
+
+    /* Grids (Enforcing exactly 3 or 2 per row) */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
+
+    /* Images */
+    .feature-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Data Tables */
+    .data-table-wrapper {
+      background: var(--bg-1); /* Use theme bg for tables so they match the section */
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); line-height: 1.6; }
+    th {
+      background: var(--table-header);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+    tr:last-child td { border-bottom: none; }
+    
+    .interactive-list li {
+      padding: 16px;
+      background: #1a1429;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    .interactive-list li:hover {
+      border-left: 4px solid var(--brand-primary);
+      transform: translateX(4px);
+    }
+
+    /* Flow of Funds Interactive Diagram */
+    .flow-container {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 32px;
+      background: var(--bg-1);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .flow-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 160px;
+    }
+    .flow-node {
+      background: rgba(113, 51, 174, 0.1);
+      border: 1px solid rgba(113, 51, 174, 0.3);
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+    }
+    .flow-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(113, 51, 174, 0.2);
+      background: rgba(113, 51, 174, 0.2);
+    }
+    .flow-node.highlight {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: white;
+      border: none;
+      font-size: 15px;
+      padding: 20px 16px;
+      box-shadow: 0 4px 12px rgba(113, 51, 174, 0.4);
+    }
+    .flow-arrow {
+      color: var(--brand-accent);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      animation: pulseArrow 2s infinite;
+    }
+    @keyframes pulseArrow {
+      0% { transform: translateX(0); opacity: 0.5; }
+      50% { transform: translateX(5px); opacity: 1; }
+      100% { transform: translateX(0); opacity: 0.5; }
+    }
+    .flow-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    [data-theme="light"] .flow-node { background: rgba(113, 51, 174, 0.05); border-color: rgba(113, 51, 174, 0.2); }
+    [data-theme="light"] .flow-node:hover { background: rgba(113, 51, 174, 0.1); }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border-color);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .section { padding: 48px; }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); } /* Drop to 2 for tablets */
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .section { padding: 32px 24px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; } /* Stack on mobile */
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <div class="landing-content">
+      <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser Logo" style="height: 36px; margin-bottom: 32px; filter: grayscale(100%) brightness(1000%); transition: filter 0.3s ease;">
+      <h1 class="landing-title">US Healthcare Market Overview</h1>
+      <p class="landing-subtitle">Experience comprehensive healthcare ecosystem dynamics through detailed research, structured data, and interactive insights.</p>
+      
+      <button class="btn-start" onclick="startJourney()">
+        <span>🏥</span> Explore Documentation &rarr;
+      </button>
+      
+      <div class="landing-features">
+        <span>📄 Full PPT/PDF Coverage</span>
+        <span>📊 Market Realities</span>
+        <span>🔄 Interactive Layout</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div id="app-layout">
+    <header class="header">
+      <a href="#">
+        <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser" class="logo" />
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        ☀️ Light Mode
+      </button>
+    </header>
+
+    <div class="layout-wrapper">
+      <aside class="sidebar">
+        <h4>Contents</h4>
+        <ul id="nav-links">
+          <li><a href="#intro" class="active">Introduction</a></li>
+          <li><a href="#facts">Interesting Facts</a></li>
+          <li><a href="#players">Players in Healthcare</a></li>
+          <li><a href="#characteristics">Characteristics</a></li>
+          <li><a href="#federal">Federal Government</a></li>
+          <li><a href="#expensive">Why is it Expensive?</a></li>
+          <li><a href="#pros">Pros of US Healthcare</a></li>
+          <li><a href="#comparison">Global Comparison</a></li>
+          <li><a href="#segmentation">Segmentation</a></li>
+          <li><a href="#regulatory">Regulatory Bodies</a></li>
+          <li><a href="#acronyms">Acronyms</a></li>
+          <li><a href="#references">References</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+
+        <!-- Introduction Section -->
+        <section id="intro" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🌍 Introduction to US Healthcare</h2>
+            
+            <div class="content-box">
+              <h3 style="margin-top:0;">📌 What is Healthcare?</h3>
+              <p>“Healthcare is the maintenance or improvement of health via the prevention, diagnosis, and treatment of illness, injury, disease, and other physical or mental impairments” - WHO.</p>
+              <p>A well-functioning healthcare sector is a prerequisite for a well-functioning economy.</p>
+            </div>
+            
+            <h3 class="subsection-header">🎯 Healthcare Goals</h3>
+            <p style="margin-bottom:20px;">The World Health Report defines 3 intrinsic goals of a health system:</p>
+            
+            <!-- 3 Items = 3-in-line Grid -->
+            <div class="grid-3">
+              <div class="content-box" style="text-align: center; margin-bottom:0;">
+                <span style="font-size: 24px; display: block; margin-bottom:10px;">📈</span>
+                <strong>Effectiveness</strong>
+              </div>
+              <div class="content-box" style="text-align: center; margin-bottom:0;">
+                <span style="font-size: 24px; display: block; margin-bottom:10px;">⚡</span>
+                <strong>Responsiveness</strong>
+              </div>
+              <div class="content-box" style="text-align: center; margin-bottom:0;">
+                <span style="font-size: 24px; display: block; margin-bottom:10px;">🛡️</span>
+                <strong>No Financial Risk</strong>
+              </div>
+            </div>
+            <h3 class="subsection-header">🎥 History of US Healthcare System</h3>
+            <div class="content-box">
+              <h3 style="margin-top:0;">📋 Objectives</h3>
+              <ul>
+                <li>Discusses on how healthcare evolved and grew in the US.</li>
+                <li>Health insurance used as a tool to attract new employees.</li>
+                <li>Medicaid, Medicare and such programs introduced later to help the poor to combat rising elderly costs.</li>
+                <li>Group insurance by employers is much cheaper. Self-employed/unemployed have more healthcare-related costs.</li>
+              </ul>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="https://drive.google.com/file/d/14IHtvnHyR69TVoxrBQlIndHsZg4o5qs4/view?usp=drive_link" target="_blank" style="position: relative; display: inline-block; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); transition: transform 0.2s; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                  <img src="images/history-thumbnail.png" alt="Video Thumbnail" style="width: 100%; max-width: 600px; display: block;">
+                  <img src="images/play-icon.png" alt="Play Icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));">
+                  <div style="position: absolute; bottom: 16px; right: 16px; background: rgba(0,0,0,0.85); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px);">
+                    🎬 Click to Watch Video
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Facts Section -->
+        <section id="facts" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">💡 Interesting Facts about US Healthcare</h2>
+            <div class="content-box">
+              <ul class="interactive-list">
+                <li><strong>⚠️ Highest Spending, Poorer Outcomes:</strong> The US spends the most but lags behind in basic health outcomes.</li>
+                <li><strong>🧬 Chronic Conditions Drives Costs:</strong> The majority of spending is on long-term chronic disease management.</li>
+                <li><strong>💊 Skyrocketing Drug Spending:</strong> $600 billion is spent on prescription drugs alone.</li>
+                <li><strong>🗑️ Huge Waste and Administrative Inefficiencies:</strong> Complexity drives up non-care costs.</li>
+                <li><strong>🏥 Hospitals and Infrastructure:</strong> The system boasts 6,093 hospitals, 900,000 staffed beds, and 34 million hospital admissions annually.</li>
+                <li><strong>🚧 Access Barriers Persist:</strong> 7.3% of U.S. adults skipped needed medical care in 2024 due to cost.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Players Section -->
+        <section id="players" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🤝 Players in US Healthcare</h2>
+
+            <p style="margin-bottom: 24px;">The entire ecosystem revolves around the liability of the patient population.</p>
+            
+            <!-- 3 Items = 3-in-line Grid -->
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏥 Providers (Services)</h3>
+                <ul>
+                  <li>Physician Practice</li>
+                  <li>Hospitals</li>
+                  <li>Long Term Care</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">💳 Payers</h3>
+                <ul>
+                  <li>Insurance Companies</li>
+                  <li>Self-Insured (Employers)</li>
+                  <li>Government</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔬 Life Sciences</h3>
+                <ul>
+                  <li>Pharma & Biotech (Drug Discovery, Manufacturing)</li>
+                  <li>Medical Devices</li>
+                  <li>Clinical Research Organization (CRO)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Characteristics Section -->
+        <section id="characteristics" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📊 Characteristics Of US Healthcare</h2>
+            <div class="content-box">
+              <ul style="list-style-type: '👉  ';">
+                <li>One of the largest healthcare systems in the world & arguably the most complex - largely owned and operated by private business.</li>
+                <li>Has <strong>No Universal Health Program</strong>, unlike most developed nations.</li>
+                <li>Healthcare Spend has outpaced the growth rate in the gross domestic product (GDP).</li>
+                <li>Predominance of Private insurance: Coverage provided primarily by employers.</li>
+                <li>Mixed Healthcare System: Consists of public and private, for-profit and non-profit insurers & health care providers.</li>
+                <li>Benefit packages and cost-sharing structure: Offered by public & private insurers governed by federal and state regulations.</li>
+                <li>The 2019 WHO survey of the healthcare systems found the US healthcare system to be the most expensive and worst-performing.</li>
+                <li>Extremely Complex Adaptive System with each independent agent acting in their own perceived interest with no charge.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Federal Govt Section -->
+        <section id="federal" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🏛️ Role of Federal Government</h2>
+            <div class="content-box">
+              <ul style="list-style-type: '🏛️  ';">
+                <li>The Department of Health and Human Services (HHS) is responsible for public health in the US.</li>
+                <li>Government provides National insurance coverage program via <strong>Medicare</strong> (For 65 yrs. and above. Also for less than 65 yrs. with disabilities/ESRD).</li>
+                <li>Medicare dominates & sets benchmark for others on healthcare payments.</li>
+                <li><strong>Medicaid</strong> is a state-based insurance coverage program, jointly adopted by state and federal (who sets standards), for Children & the low-income citizens.</li>
+                <li>Federal govt also: Surveys Health Status & Needs, Sets Policies & Standards, Passes Laws & Regulations, and Supports Research.</li>
+                <li>18% of US Population are covered under the Medicare & 21% under the Medicaid + CHIP.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Expensive Section -->
+        <section id="expensive" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">💸 Why US Healthcare is expensive?</h2>
+
+            
+            <h3 class="subsection-header">📊 US Healthcare Spendings</h3>
+            <div class="content-box" style="text-align: center; background: #fff; padding: 24px; overflow: hidden; margin-bottom: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              <div id="spendings-pie-chart" style="width: 100%; height: 500px;"></div>
+            </div>
+
+            <h3 class="subsection-header">🔄 Flow of Funds in US Healthcare</h3>
+            <div class="content-box" style="text-align: center; background: #fff; padding: 24px; overflow: hidden; margin-bottom: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              <div id="flow-org-chart" style="width: 100%; height: 600px;"></div>
+            </div>
+            
+            <!-- 3 Sections = 3-in-line Grid -->
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔄 Flow of Funds Details</h3>
+                <p>Funds flow from US Individuals (via State/Federal Taxes, Paycheck Deductions, Private Purchase, or Out-of-pocket spend) to Private/Public Healthcare Insurance and eventually to Healthcare Providers.</p>
+              </div>
+
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📈 Most Expensive Stats</h3>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>US per capita healthcare spend quadrupled (from 3.6% in 1980 to 16.9% in 2018).</li>
+                  <li>Very high administrative costs — 8% of its healthcare dollar is spent on admin costs, compared to 1% to 3% in other countries.</li>
+                  <li>30% of total spend goes to unnecessary, ineffective, overpriced &amp; wasteful services.</li>
+                  <li>Americans spend 4 times on prescriptive drugs compared to average of other countries.</li>
+                  <li>Hospitals work as profit centers and account for 33% of the nation's healthcare costs.</li>
+                  <li>Older Americans accounting for 16% of the population increase the healthcare cost.</li>
+                </ul>
+                <h4 style="margin-top: 16px; color: #f43f5e;">📊 Stats (as of 2024):</h4>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>8.2% have no health insurance.</li>
+                  <li>&gt;1M went overseas to get a better deal.</li>
+                  <li>9% declared bankrupt due to high medical bills.</li>
+                </ul>
+              </div>
+
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🛑 US Healthcare Expensive: Causes</h3>
+                <p style="font-size:14px;"><em>"The single greatest cause of rising healthcare spending in the U.S. is the growing prevalence of chronic disease."</em></p>
+                <p style="font-size:14px;"><em>"The current healthcare delivery system is designed for treating acute illnesses."</em></p>
+                <h4 style="margin-top: 12px;">🔵 Acute Medical Problems</h4>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>Curable, self-limited.</li>
+                  <li>E.g. Strep throat, Appendicitis.</li>
+                </ul>
+                <h4 style="margin-top: 12px;">🔴 Chronic Medical Problems</h4>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>Incurable, requires control.</li>
+                  <li>E.g. Diabetes, Hypertension.</li>
+                </ul>
+                <h4 style="margin-top: 12px;">⚠️ Chronic Disease is Different</h4>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>Last for a lifetime.</li>
+                  <li>Cause each other.</li>
+                  <li>Behavior often causal.</li>
+                  <li>Behavior change is crucial to success.</li>
+                  <li>Requires a different care system.</li>
+                  <li>Wellness and prevention are key.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🎥 Video on why US Healthcare is Expensive</h3>
+            <div class="content-box">
+              <h3 style="margin-top:0;">📋 Objectives</h3>
+              <ul>
+                <li>Discusses on various causes for Healthcare been so expensive in US.</li>
+                <li>Primary ones are Prescription drugs which are very expensive.</li>
+                <li>Duplication of tests by different caregivers for the same patient who are not connected with each other.</li>
+                <li>Hospital Services, Administrative services for managing paperwork are few other reasons for expensive health cost.</li>
+              </ul>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="https://www.youtube.com/watch?v=pj80OmYOnSk&pp=ygUed2h5IHVzIGhlYWx0aGNhcmUgaXMgZXhwZW5zaXZl" target="_blank" style="position: relative; display: inline-block; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); transition: transform 0.2s; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                  <img src="images/us-healthcare-info.png" alt="Video Thumbnail" style="width: 100%; max-width: 100%; display: block;">
+                  <img src="images/play-icon.png" alt="Play Icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));">
+                  <div style="position: absolute; bottom: 16px; right: 16px; background: rgba(255,0,0,0.85); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px);">
+                    ▶️ Watch on YouTube
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pros Section -->
+        <section id="pros" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🌟 Pros of US Healthcare</h2>
+
+            
+            <div class="content-box">
+              <ul style="list-style-type: '✨  ';">
+                <li>United States has been the global leader in health technology Innovation, with market size of almost $120 billion reigning in biotechnology.</li>
+                <li>The US scores high on innovation, patient-centered care, and preventive health measures.</li>
+                <li>Physicians and Nurses are much better paid in the US, thus preventing strikes and demonstrations for high pay like in Germany and elsewhere.</li>
+                <li>The US has some of the best doctors and hospitals in the world, for those who can afford them.</li>
+                <li>Americans are never checked by government for using too much care like that of government owned healthcare like Taiwan or UK.</li>
+                <li>Patient wait times are much better in the USA in comparison with patients in the UK, France, Sweden and Canada due to bureaucratic government processes.</li>
+                <li>Mixed Payer markets & threat of lawsuit drives them to stay cutting edge with latest technology and best trained professionals.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🌎 Global Comparison</h2>
+            
+            <div class="content-box">
+              <h3 style="margin-top:0;">📉 WHO's Quality Indicators</h3>
+              <p>The WHO evaluates healthcare systems based on the following quality indicators:</p>
+              <div class="grid-2" style="margin-top: 16px;">
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li><strong>Care Process</strong> — Preventative, coordinated care</li>
+                  <li><strong>Patient Engagement</strong></li>
+                  <li><strong>Better Health Outcomes</strong></li>
+                  <li><strong>Access</strong> — Wait times</li>
+                </ul>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li><strong>Affordability</strong></li>
+                  <li><strong>Equity</strong></li>
+                  <li><strong>Efficiency</strong></li>
+                  <li><strong>Mortality</strong></li>
+                </ul>
+              </div>
+              <h4 style="margin-top: 16px; color: #f43f5e;">🇺🇸 US Ranks 37th due to:</h4>
+              <div class="grid-2" style="margin-top: 8px;">
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>High Medical Errors</li>
+                  <li>Adverse Drug Events</li>
+                  <li>Fragmented Care Process</li>
+                  <li>Highest Chronic Disease Burden</li>
+                </ul>
+                <ul style="padding-left:15px; font-size:14px;">
+                  <li>Accessibility</li>
+                  <li>Administrative Efficiency</li>
+                  <li>Wide Physician patient ratio</li>
+                  <li>Equity</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 2 Items = 2-in-line Grid -->
+            <div class="grid-2">
+              <div class="data-table-wrapper" style="margin-bottom:0;">
+                <table>
+                  <thead>
+                    <tr><th colspan="2">🇺🇸 US vs 🇮🇳 India Healthcare</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td width="50%"><strong>India:</strong> Spends 4% of GDP</td><td><strong>US:</strong> Spends ~18% of GDP</td></tr>
+                    <tr><td><strong>India:</strong> No insurance needed for walk-ins</td><td><strong>US:</strong> Insurance strictly needed, no walk-ins/appointments without insurance</td></tr>
+                    <tr><td><strong>India:</strong> Only 30% insured (people chose to pay out-of-pocket)</td><td><strong>US:</strong> Almost 90% insured</td></tr>
+                    <tr><td><strong>India:</strong> Purchase of health insurance is not a mandate</td><td><strong>US:</strong> Purchase of Health Insurance is a mandate</td></tr>
+                    <tr><td colspan="2" style="font-size:13px; color: var(--text-muted);">⚠️ Healthcare is a big business in both India and US where patients too often get unnecessary surgeries, tests, and other treatments that benefit private providers.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="data-table-wrapper" style="margin-bottom:0;">
+                <table>
+                  <thead>
+                    <tr><th colspan="2">🇺🇸 US vs 🇨🇦 Canada Healthcare</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td width="50%"><strong>Canada:</strong> Government-run, mostly funded single-payer system (for each Province)</td><td><strong>US:</strong> Heavily Private Healthcare model, multi-payer system</td></tr>
+                    <tr><td><strong>Canada:</strong> High level of satisfaction with the healthcare system</td><td><strong>US:</strong> High level of dissatisfaction with the healthcare system</td></tr>
+                    <tr><td><strong>Canada:</strong> Provides Universal healthcare for basic access to all citizens</td><td><strong>US:</strong> Nearly 10% of US citizens are uninsured</td></tr>
+                    <tr><td><strong>Canada:</strong> Every citizen has equal access to federal coverage for healthcare</td><td><strong>US:</strong> Federal provides health cover only for the old, disabled, unemployed &amp; poor</td></tr>
+                    <tr><td><strong>Canada:</strong> Almost 12% of total spending went to healthcare costs</td><td><strong>US:</strong> Almost 18% of USA's total spending went to healthcare costs</td></tr>
+                    <tr><td><strong>Canada:</strong> Better health outcomes</td><td><strong>US:</strong> Poor health outcomes</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Segmentation Section -->
+        <section id="segmentation" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🧩 Segmentation in US Healthcare</h2>
+            <div class="content-box" style="text-align: center; background: #fff; padding: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              <img src="slide_images/segmentation-us.png" alt="Segmentation in US Healthcare" style="width:100%; display: block; object-fit: cover;">
+            </div>
+          </div>
+        </section>
+
+        <!-- Regulatory Section -->
+        <section id="regulatory" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">⚖️ Regulatory and Influencing Bodies</h2>
+            <div class="content-box">
+              <h3 style="margin-top:0;">🏢 Department of Health and Human Services (HHS)</h3>
+              <p>The Department of Health and Human Services (HHS) is the U.S. Government's principal agency for protecting the health of all Americans and providing essential human services. It has 11 operating agencies. Primary ones as below:</p>
+            </div>
+
+            <h3 class="subsection-header">📋 Regulatory Bodies (1/2) — Primary HHS Agencies</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏛️ CMS (Center for Medicare & Medicaid)</h3>
+                <ul style="font-size:14px;">
+                  <li>Administers nation's healthcare programs.</li>
+                  <li>Medicare, Medicaid & CHIP and oversees most of the regulations related directly to the healthcare system.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">💊 FDA (Food and Drug Administration)</h3>
+                <ul style="font-size:14px;">
+                  <li>Responsible for protecting & promoting public health via the regulation of food safety, tobacco products, dietary supplements, medicine, medical devices, biological products etc.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🦠 CDC (Center for Disease Control & Prevention)</h3>
+                <ul style="font-size:14px;">
+                  <li>Protects the public health of the nation by providing leadership and direction in the prevention and control of diseases and responding to public health emergencies.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">💻 ONC for HIT (Office of the National Coordinator for Health IT)</h3>
+                <ul style="font-size:14px;">
+                  <li>Devoted to the implementation of HIT for the nationwide shift from paper to electronic medical record.</li>
+                  <li>Promotes, assists and governs the health information exchange (HIE) process.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">📋 Regulatory Bodies (2/2)</h3>
+            <div class="content-box">
+              <ul>
+                <li><strong>SAMHSA</strong> (Substance Abuse and Mental Health Services Administration) — Charged with improving the quality and availability of treatment and rehabilitative services in order to reduce illness, death, disability, and the cost to society resulting from substance abuse and mental illnesses.</li>
+                <li><strong>ONC</strong> (The Office of the National Coordinator for Health IT) — The ONC's mission involves many aspects of health information technology (HIT), including policy coordination, strategic planning for the adoption of health IT and health information exchanges (HIE), establishing governance for the Nationwide Health Information Network and promoting a national health IT infrastructure.</li>
+                <li><strong>HITSP</strong> (Health Information Technology Standards Panel) — An organization created to promote standardization and broad scale interoperability among healthcare applications and information systems.</li>
+              </ul>
+            </div>
+            
+            <h3 class="subsection-header">🏛️ CMS Overview</h3>
+            <div class="content-box">
+              <h3 style="margin-top:0;">📋 Objectives</h3>
+              <ul>
+                <li>Discussed programs like Medicare, Medicaid and CHIP which are managed by CMS.</li>
+                <li>History of CMS, focus on improving quality and reducing cost.</li>
+                <li>Functioning of CMS and its objectives and mission.</li>
+                <li>Describes the various quality programs introduced for better care.</li>
+              </ul>
+            </div>
+            <div class="content-box" style="text-align: center; background: #fff; padding: 0; overflow: hidden; margin-bottom: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              <img src="slide_images/cms-overview.png" alt="CMS Overview" style="width:100%; display: block; object-fit: cover;">
+            </div>
+
+            <!-- 2 Items = 2-in-line Grid -->
+            <h3 class="subsection-header">✅ Quality & Accreditation Agencies</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔬 AHRQ</h3>
+                <p style="font-size:14px;">Agency of Healthcare Research and Quality — Conducts research aimed at improving the quality of healthcare, reducing its costs, and addressing patient safety and medical errors.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏥 JCAHO</h3>
+                <p style="font-size:14px;">The Joint Commission on Accreditation of Healthcare Organizations — A non-for-profit organization which employs a system of examining and accrediting healthcare organizations, which has an impact on their reimbursement from CMS.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📋 NCQA</h3>
+                <p style="font-size:14px;">National Committee for Quality Assurance — A non-for-profit organization which ensures the quality of the managed care plans. It also provides accreditation for newer organizational models e.g. ACOs and PCMHs.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📊 NQF</h3>
+                <p style="font-size:14px;">National Quality Forum — A non-for-profit organization which sets goals for performance management, endorses standards used for measuring performance and promotes educational and outreach programs.</p>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">⚙️ Standards Setting & Influencing Bodies</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔗 HL7 (Health Level Seven)</h3>
+                <p style="font-size:14px;">A not-for-profit, ANSI-accredited standards organization. The focus of HL7 work is in supplying a structure for the development and electronic distribution of health information that is used in clinical practice.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🌐 IHE (Integrating the Healthcare Enterprise)</h3>
+                <p style="font-size:14px;">An international organization that focuses on the development of open and global Integration Profiles and on the regional deployment of interoperable IT systems.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📖 IHTSDO</h3>
+                <p style="font-size:14px;">International Health Terminology Standards Developing Organization — A non-for-profit organization which owns SNOMED-CT, the most comprehensive, multilingual clinical terminology in the world.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🖼️ DICOM</h3>
+                <p style="font-size:14px;">Digital Imaging and Communications in Medicine — A standard for handling, storing, printing, and transmitting information in medical imaging.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Acronyms Section -->
+        <section id="acronyms" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📚 Acronyms / Abbreviations</h2>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th width="20%">Abbreviation</th>
+                    <th>Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>WHO</strong></td><td>World Health Organization</td></tr>
+                  <tr><td><strong>CDC</strong></td><td>Centers for Disease Control and Prevention</td></tr>
+                  <tr><td><strong>CMS</strong></td><td>Centers for Medicare and Medicaid Services</td></tr>
+                  <tr><td><strong>HHS</strong></td><td>U.S. Department of Health and Human Services</td></tr>
+                  <tr><td><strong>FDA</strong></td><td>Food and Drug Administration</td></tr>
+                  <tr><td><strong>AHRQ</strong></td><td>Agency for Healthcare Research and Quality</td></tr>
+                  <tr><td><strong>NCQA</strong></td><td>National Committee for Quality Assurance</td></tr>
+                  <tr><td><strong>ONC</strong></td><td>Office of the National Coordinator for Health Information Technology</td></tr>
+                  <tr><td><strong>MCO</strong></td><td>Managed Care Organization</td></tr>
+                  <tr><td><strong>PBM</strong></td><td>Pharmacy Benefit Manager</td></tr>
+                  <tr><td><strong>ESRD</strong></td><td>End Stage Renal Disease</td></tr>
+                  <tr><td><strong>CHIP</strong></td><td>Children Health Insurance Program</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- References Section -->
+        <section id="references" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">📎 References</h2>
+            <div class="content-box">
+              <ul>
+                <li><a href="https://www.brookings.edu/research/a-dozen-facts-about-the-economics-of-the-u-s-health-care-system/" target="_blank" style="color: var(--brand-accent);">Brookings — A Dozen Facts About the Economics of the U.S. Health-Care System</a></li>
+                <li><a href="https://worldpopulationreview.com/countries/best-healthcare-in-the-world/" target="_blank" style="color: var(--brand-accent);">World Population Review — Rankings: Best Healthcare in the World</a></li>
+                <li><a href="https://www.commonwealthfund.org/publications/issue-briefs/2020/jan/us-health-care-global-perspective-2019" target="_blank" style="color: var(--brand-accent);">Commonwealth Fund — U.S. Health Care from a Global Perspective, 2019</a></li>
+              </ul>
+            </div>
+
+            <div class="content-box" style="text-align: center; margin-top: 32px;">
+              <h3 style="margin-top:0;">💬 Let's discuss for better understanding</h3>
+              <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Thank you!</p>
+              <p style="font-size: 14px;"><a href="https://www.mindbowser.com" target="_blank" style="color: var(--brand-accent);">www.mindbowser.com</a></p>
+              <p style="font-size: 14px;"><a href="mailto:contact@mindbowser.com" style="color: var(--brand-accent);">contact@mindbowser.com</a> &nbsp;|&nbsp; +1 408 786 5974</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer class="footer">
+      &copy; 2026 Healthcare COE | Mindbowser Documentation
+    </footer>
+  </div>
+
+  <script>
+    // Landing page transition
+    function startJourney() {
+      const landing = document.getElementById('landing-page');
+      const layout = document.getElementById('app-layout');
+      
+      landing.style.opacity = '0';
+      setTimeout(() => {
+        landing.style.display = 'none';
+        layout.classList.add('active');
+      }, 500);
+    }
+
+    // Theme Toggle Functionality
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-btn');
+      
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeBtn.innerHTML = '🌙 Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '☀️ Light Mode';
+      }
+    }
+
+    // Scroll spy for sidebar links
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.sidebar a');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 100) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // Smooth scroll click handler
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetSection = document.getElementById(targetId);
+          window.scrollTo({
+            top: targetSection.offsetTop - 60, // Offset for sticky header
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+
+    // Highcharts 3D Pie Chart Initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      Highcharts.chart('spendings-pie-chart', {
+        chart: {
+          type: 'pie',
+          backgroundColor: 'transparent',
+          options3d: {
+            enabled: true,
+            alpha: 45,
+            beta: 0
+          }
+        },
+        title: {
+          text: 'US Healthcare Spendings (by Payer)',
+          style: {
+            fontFamily: 'Outfit',
+            fontSize: '22px',
+            fontWeight: '600',
+            color: '#0f172a'
+          }
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 45,
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: {point.percentage:.0f}%',
+              style: {
+                fontFamily: 'Inter',
+                fontSize: '14px',
+                color: '#0f172a',
+                textOutline: 'none'
+              }
+            }
+          }
+        },
+        colors: ['#3b82f6', '#0ea5e9', '#6366f1', '#22c55e', '#a855f7'],
+        series: [{
+          type: 'pie',
+          name: 'Spending Share',
+          data: [
+            ['Federal Govt', 32.0],
+            ['Out-of-Pocket', 27.0],
+            ['Private Businesses', 18.0],
+            ['State & Local Govt', 16.0],
+            ['Other Private Rev', 7.0]
+          ]
+        }]
+      });
+
+
+      // Highcharts Organization Chart Initialization
+      Highcharts.chart('flow-org-chart', {
+        chart: { height: 600, inverted: true, backgroundColor: 'transparent' },
+        title: { text: '' },
+        series: [{
+          type: 'organization',
+          name: 'Flow of Funds',
+          keys: ['from', 'to'],
+          data: [
+            ['US Individuals', 'State Taxes'],
+            ['US Individuals', 'Federal Taxes'],
+            ['US Individuals', 'Paycheck Deduction'],
+            ['US Individuals', 'Employer Sponsored'],
+            ['US Individuals', 'Private Purchase'],
+            ['US Individuals', 'Out of Pocket'],
+            
+            ['State Taxes', 'Medicaid (State)'],
+            ['Federal Taxes', 'Medicare (Federal)'],
+            
+            ['Paycheck Deduction', 'Private Insurance'],
+            ['Employer Sponsored', 'Private Insurance'],
+            ['Private Purchase', 'Private Insurance'],
+            
+            ['Out of Pocket', 'Others'],
+
+            ['Medicaid (State)', 'Public Insurance'],
+            ['Medicare (Federal)', 'Public Insurance'],
+
+            ['Public Insurance', 'Healthcare Providers'],
+            ['Private Insurance', 'Healthcare Providers'],
+            ['Others', 'Healthcare Providers']
+          ],
+          levels: [
+            { level: 0, color: '#7133AE' },
+            { level: 1, color: '#5d2a90' },
+            { level: 2, color: '#38b8b3' },
+            { level: 3, color: '#0ea5e9' },
+            { level: 4, color: '#e11d48' }
+          ],
+          nodes: [
+            { id: 'US Individuals', title: 'Source' },
+            { id: 'Healthcare Providers', title: 'Destination' }
+          ],
+          colorByPoint: false,
+          color: '#007ad0',
+          dataLabels: { color: 'white', style: { fontFamily: 'Inter', fontSize: '13px' } },
+          borderColor: 'transparent',
+          nodeWidth: 70,
+          nodePadding: 15,
+          linkColor: '#7133AE'
+        }],
+        tooltip: { outside: true }
+      });
+    });
+  </script>
+</body>
+</html>
