@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIPAA Compliance Training</title>
+  <link rel="icon" type="image/png" href="https://www.mindbowser.com/wp-content/uploads/2025/10/512x512-1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Mindbowser Brand Colors (Kept for landing/sidebar consistency) */
+      --brand-primary: #7133AE;
+      --brand-secondary: #5d2a90;
+      --brand-accent: #38b8b3;
+      --brand-light: rgba(113, 51, 174, 0.18);
+      
+      /* Dark Theme (Default) */
+      --bg-landing: #1a1e2e;
+      --bg-1: #060913; /* Darker, deeper space black */
+      --bg-2: #0a0f1d; /* Deep blue-tinted black */
+      --text-main: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --sidebar-bg: rgba(6, 9, 19, 0.98);
+      --header-bg: rgba(6, 9, 19, 0.98);
+      --table-header: rgba(14, 165, 233, 0.15); /* Teal header for tables */
+      --logo-filter: none;
+      --theme-btn-bg: rgba(255, 255, 255, 0.1);
+      --theme-btn-hover: rgba(255, 255, 255, 0.2);
+
+      /* New Cybersecurity Aesthetic Colors */
+      --cyber-teal: #0ea5e9;
+      --cyber-blue: #3b82f6;
+      --cyber-alert: #f43f5e;
+      --cyber-success: #10b981;
+    }
+
+    [data-theme="light"] {
+      /* Light Theme */
+      --bg-landing: #e2e8f0;
+      --bg-1: #f8fafc;
+      --bg-2: #f1f5f9; 
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --sidebar-bg: #ffffff;
+      --header-bg: #ffffff;
+      --table-header: rgba(14, 165, 233, 0.1);
+      --logo-filter: invert(1) hue-rotate(180deg);
+      --theme-btn-bg: rgba(0, 0, 0, 0.05);
+      --theme-btn-hover: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-1);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* --- Landing Page --- */
+    #landing-page {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-landing);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    .landing-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+    }
+
+    .landing-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .landing-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #fff;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(113, 51, 174, 0.4);
+    }
+
+    /* --- App Layout --- */
+    #app-layout {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    #app-layout.active {
+      display: flex;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .header .logo {
+      height: 24px;
+      filter: var(--logo-filter);
+      transition: filter 0.3s ease;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: var(--theme-btn-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--theme-btn-hover);
+    }
+
+    .layout-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      position: fixed;
+      top: 60px; bottom: 0; left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .sidebar h4 {
+      color: var(--brand-primary);
+      margin: 0 0 16px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+    [data-theme="dark"] .sidebar a:hover, [data-theme="dark"] .sidebar a.active {
+      color: #fff;
+      background: rgba(14, 165, 233, 0.15); /* Shift active state to teal for HIPAA */
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Alternating Sections */
+    .section {
+      padding: 64px 80px;
+      scroll-margin-top: 60px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section.bg-1 { background-color: var(--bg-1); }
+    .section.bg-2 { background-color: var(--bg-2); }
+    
+    .section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Section Headers */
+    .section-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+    .section-header::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyber-teal), transparent);
+    }
+    
+    .subsection-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 40px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Glassmorphism Cards (Cybersecurity Aesthetic) */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 40px -8px rgba(0,0,0,0.4);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-teal));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px -12px rgba(14, 165, 233, 0.2);
+      border-color: rgba(14, 165, 233, 0.3);
+    }
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+
+    .glass-card.alert-card::before {
+      background: linear-gradient(90deg, #f43f5e, #fb923c);
+      opacity: 1;
+    }
+    .glass-card.alert-card {
+      border-color: rgba(244, 63, 94, 0.2);
+    }
+    
+    [data-theme="light"] .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        box-shadow: 0 16px 40px -8px rgba(14, 165, 233, 0.1);
+    }
+    [data-theme="light"] .glass-card.alert-card {
+        border-color: rgba(244, 63, 94, 0.3);
+    }
+
+    .glass-card h3 { 
+        color: var(--cyber-teal); 
+        margin-top: 0; 
+        font-family: 'Outfit', sans-serif;
+        font-size: 22px;
+        letter-spacing: -0.5px;
+    }
+    .glass-card.alert-card h3 { color: var(--cyber-alert); }
+    
+    .glass-card p { line-height: 1.7; margin-bottom: 16px; color: var(--text-muted); }
+    .glass-card ul { padding-left: 20px; line-height: 1.7; color: var(--text-main); }
+    .glass-card li { margin-bottom: 12px; }
+    
+    /* Theme-aware Utility Classes */
+    .gradient-card {
+        text-align: center;
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(15, 23, 42, 0.8));
+    }
+    [data-theme="light"] .gradient-card {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(14, 165, 233, 0.05));
+    }
+    
+    .highlight-box {
+        padding: 24px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.3);
+    }
+    .highlight-box-light {
+        background: rgba(255,255,255,0.05);
+        padding: 24px;
+        border-radius: 12px;
+    }
+    [data-theme="light"] .highlight-box,
+    [data-theme="light"] .highlight-box-light {
+        background: rgba(14, 165, 233, 0.08);
+    }
+    
+    .theme-text-white { color: #fff; }
+    [data-theme="light"] .theme-text-white { color: var(--text-main); }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+    /* Verbatim List Styling (replaces compact data-pills for long text) */
+    .verbatim-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+    }
+    .verbatim-item {
+        background: rgba(14, 165, 233, 0.05);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        padding: 16px 24px;
+        border-radius: 8px;
+        font-size: 15px;
+        color: var(--text-main);
+        transition: all 0.2s;
+        display: flex;
+        align-items: flex-start;
+        line-height: 1.6;
+    }
+    .verbatim-item::before {
+        content: '●';
+        color: var(--cyber-teal);
+        margin-right: 16px;
+        font-size: 18px;
+    }
+    .verbatim-item:hover {
+        background: rgba(14, 165, 233, 0.1);
+        transform: translateX(4px);
+    }
+    
+    [data-theme="light"] .verbatim-item {
+        background: #f0f9ff;
+        color: var(--text-main);
+    }
+    [data-theme="light"] .verbatim-item:hover {
+        background: #e0f2fe;
+    }
+
+    /* Checklist Component */
+    .checklist-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .check-item {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        gap: 16px;
+        transition: all 0.3s ease;
+    }
+    .check-item:hover {
+        background: rgba(14, 165, 233, 0.05);
+        border-color: rgba(14, 165, 233, 0.3);
+        transform: translateX(4px);
+    }
+    .check-icon {
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .check-content h4 { margin: 0 0 8px 0; color: var(--text-main); font-size: 16px; }
+    .check-content p { margin: 0; font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+    [data-theme="light"] .check-item { background: #ffffff; }
+
+    /* Tables */
+    .data-table-wrapper {
+      background: var(--bg-1);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 20px 24px; text-align: left; border-bottom: 1px solid var(--border-color); line-height: 1.6; }
+    th {
+      background: var(--table-header);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      text-transform: uppercase;
+      color: var(--cyber-teal);
+      letter-spacing: 0.5px;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(14, 165, 233, 0.02); }
+
+    .formula-box {
+        font-family: 'Outfit', sans-serif;
+        font-size: 24px;
+        font-weight: 800;
+        text-align: center;
+        padding: 32px;
+        background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(59,130,246,0.1));
+        border-radius: 16px;
+        border: 1px dashed var(--cyber-teal);
+        margin-top: 24px;
+        color: var(--cyber-teal);
+    }
+
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border-color);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .section { padding: 48px; }
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); } 
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .section { padding: 32px 24px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } 
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <div class="landing-content">
+      <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser Logo" style="height: 36px; margin-bottom: 32px; filter: grayscale(100%) brightness(1000%); transition: filter 0.3s ease;">
+      <h1 class="landing-title">HIPAA Compliance Training</h1>
+      <p class="landing-subtitle">Essential training for healthcare technology teams. Learn the fundamentals, rules, and technical requirements for building secure, compliant software.</p>
+      
+      <button class="btn-start" onclick="startJourney()">
+        <span>🔒</span> Start Training &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div id="app-layout">
+    <header class="header">
+      <a href="#">
+        <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser" class="logo" />
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        ☀️ Light Mode
+      </button>
+    </header>
+
+    <div class="layout-wrapper">
+      <aside class="sidebar">
+        <h4>Contents</h4>
+        <ul id="nav-links">
+          <li><a href="#trainers" class="active">About the Trainers</a></li>
+          <li><a href="#phi-hipaa">What is PHI & HIPAA</a></li>
+          <li><a href="#applicability">Who Needs to Comply?</a></li>
+          <li><a href="#key-rules">HIPAA Key Rules</a></li>
+          <li><a href="#checklist">Developer Checklist</a></li>
+          <li><a href="#violations">Violations & Penalties</a></li>
+          <li><a href="#avoiding">Avoiding Violations</a></li>
+          <li><a href="#onc-cures">ONC Cures Act</a></li>
+          <li><a href="#breach-details">Breach Reporting</a></li>
+          <li><a href="#summary">Summary</a></li>
+          <li><a href="#qa">Q&A</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        
+        <!-- Trainers Section -->
+        <section id="trainers" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">👨‍🏫 About the Trainers</h2>
+            <div class="grid-2">
+              <div class="glass-card">
+                <h3 style="color: var(--cyber-blue); margin-bottom: 4px;">Shivani Jain</h3>
+                <p style="color: var(--cyber-teal); font-weight: 600; font-size: 14px; margin-top: 0;">Domain Expert MHLC</p>
+                <ul style="margin-top: 16px; font-size: 14px;">
+                  <li>13+ years of experience in healthcare</li>
+                  <li>Have worked in various hospitals & healthcare setups</li>
+                  <li>Experience of NABH Accreditation for hospitals</li>
+                  <li>A HIPAA Certified trainer</li>
+                  <li>A Certified Healthcare Domain Expert</li>
+                </ul>
+              </div>
+              <div class="glass-card">
+                <h3 style="color: var(--cyber-blue); margin-bottom: 4px;">Arun Badole</h3>
+                <p style="color: var(--cyber-teal); font-weight: 600; font-size: 14px; margin-top: 0;">VP Engg, Mindbowser</p>
+                <ul style="margin-top: 16px; font-size: 14px;">
+                  <li>15+ years of experience in engineering & product development</li>
+                  <li>Certified HL7 FHIR Expert</li>
+                  <li>Leading healthcare technology innovation, Security and Compliance initiatives</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PHI & HIPAA Section -->
+        <section id="phi-hipaa" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🔐 What is PHI &amp; HIPAA?</h2>
+            
+            <div class="glass-card">
+              <h3>Protected Health Information</h3>
+              <p>Also referred to as “Personal health information”</p>
+              <p>It means any kind of information in the medical record or designated record set that can be used to identify an individual and that was created, used, or disclosed in the course of providing a health care service such as diagnosis or treatment.</p>
+              
+              <h4 style="margin-top: 32px; color: var(--text-main); font-weight: 600;">A PHI includes an individual's:</h4>
+              <div class="verbatim-list">
+                <span class="verbatim-item">Demographic information</span>
+                <span class="verbatim-item">Financial information</span>
+                <span class="verbatim-item">Medical histories, test and laboratory results,</span>
+                <span class="verbatim-item">Mental health conditions</span>
+                <span class="verbatim-item">Insurance information,</span>
+                <span class="verbatim-item">Social security number and</span>
+                <span class="verbatim-item">Other data that a healthcare professional collects to identify an individual and determine appropriate care.</span>
+              </div>
+            </div>
+
+            <!-- Missing PHI Value / Misuse card added here -->
+            <div class="glass-card alert-card" style="border-color: var(--cyber-alert);">
+              <h3 style="color: var(--cyber-alert);">🚨 Why is PHI so valuable?</h3>
+              <p>PHI is valuable because it contains both medical and personal identity information. Criminals use it for fraud, identity theft, fake insurance claims, or illegal drug access.</p>
+              <p><strong>Misuse of PHI Such as:</strong> Cyber fraud, blackmailing by using personal information, Financial information and SSN.</p>
+            </div>
+
+            <!-- Missing De-identified Data explanation added here -->
+            <div class="glass-card" style="border-color: var(--cyber-blue);">
+              <h3 style="color: var(--cyber-blue);">De-identified Data</h3>
+              <p>De-identified data means health information that cannot be used to identify an individual. Once PHI is properly de-identified, it is no longer considered PHI under HIPAA, and the Privacy Rule no longer applies to it.</p>
+            </div>
+
+            <div class="glass-card">
+              <h3>HIPAA</h3>
+              <p style="font-size: 18px; color: var(--cyber-teal); font-weight: 500;">“Health Insurance Portability and Accountability Act” of 1996.</p>
+              <p style="margin-top: 16px;">HIPAA laws are a series of federal regulatory standards outlining the lawful use and disclosure of protected health information in the United States. HIPAA compliance is regulated by the Department of Health and Human Services (HHS) and enforced by the Office for Civil Rights (OCR).</p>
+              <ul style="margin-top: 16px;">
+                <li>HIPAA compliance is essential in the healthcare industry to ensure the protection of patients' sensitive health information (PHI).</li>
+                <li>The main purpose of HIPAA measures is to protect the health information and medical privacy of the patients.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Applicability Section -->
+        <section id="applicability" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">👥 Who Needs to be HIPAA Compliant?</h2>
+            
+            <div class="glass-card gradient-card">
+              <h3 style="font-size: 26px;">Anyone handling Electronic Protected Health Information (ePHI)</h3>
+              <p style="font-size: 18px; max-width: 800px; margin: 0 auto; color: var(--text-main);">Anyone who creates, receives, maintains, or transmits electronic protected health information (ePHI) must comply with HIPAA rules.</p>
+            </div>
+            
+            <h3 class="subsection-header">The HIPAA Rules apply to:</h3>
+            <p style="font-size: 16px; margin-bottom: 24px; color: var(--text-muted);">Covered Entities &amp; Business Associates.</p>
+            
+            <div class="grid-2">
+              <div class="glass-card">
+                <h3 style="margin-bottom: 8px;">Covered Entities (CE)</h3>
+                <p style="margin-bottom: 16px; color: var(--cyber-teal);">Directly associated with PHI</p>
+                <p>A covered entity is one of the following - A healthcare provider, A health Plan, A healthcare Clearinghouse; but only if they transmit any information in an electronic form in connection with a transaction for which HHS has adopted a standard.</p>
+                
+                <h4 style="margin-top: 24px; color: var(--text-main);">Healthcare Provider</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Doctors, Clinics, Psychologists, Dentists, Chiropractors, Nursing Homes, Pharmacies</p>
+                
+                <h4 style="margin-top: 20px; color: var(--text-main);">Health Plan</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Health insurance companies, HMOs, Company health plans, Government programs that pay for health care, such as Medicare, Medicaid, and the military and veterans health care programs</p>
+
+                <h4 style="margin-top: 20px; color: var(--text-main);">Healthcare Clearinghouse</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Entities that process nonstandard health information they receive from another entity into a standard format (e.g., billing services).</p>
+                
+                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
+                  <p style="font-size: 14px; color: var(--cyber-teal); font-weight: 600;">Overall, HIPAA compliance is a shared responsibility between covered entities and their business associates to ensure the confidentiality, integrity, and availability of PHI.</p>
+                </div>
+              </div>
+
+              <div class="glass-card">
+                <h3 style="margin-bottom: 8px;">Business Associates (BA)</h3>
+                <p>Any outside entity that handles PHI on behalf of a covered entity is considered a business associate.</p>
+                <p>They perform certain functions on behalf of a covered entity that involve the use or disclosure of PHI.</p>
+                <ul style="color: var(--text-muted); font-size: 14px;">
+                  <li>third-party billing companies</li>
+                  <li>IT providers: Dev, QA etc</li>
+                  <li>lawyers, accountants, and consultants</li>
+                </ul>
+                <h4 style="margin-top: 24px; color: var(--text-main);">Examples of Business Associates:</h4>
+                <div class="verbatim-list" style="margin-top: 12px;">
+                  <span class="verbatim-item" style="font-size: 14px; padding: 12px;">A third party administrator that assists a health plan with claims processing.</span>
+                  <span class="verbatim-item" style="font-size: 14px; padding: 12px;">A CPA firm whose accounting services to a health care provider involve access to protected health information.</span>
+                  <span class="verbatim-item" style="font-size: 14px; padding: 12px;">An attorney whose legal services to a health plan involve access to protected health information.</span>
+                  
+                  <!-- Utilization Review missing explanation added as tooltip note here -->
+                  <span class="verbatim-item" style="font-size: 14px; padding: 12px; display: block;">
+                    A consultant that performs utilization reviews for a hospital.
+                    <span style="font-size: 12px; color: var(--cyber-teal); display: block; margin-top: 6px;">*Note: Utilization review helps determine if healthcare services are being used efficiently and appropriately to provide patients with the care they need.</span>
+                  </span>
+                  
+                  <span class="verbatim-item" style="font-size: 14px; padding: 12px;">A health care clearinghouse that translates a claim from a non-standard format into a standard transaction on behalf of a health care provider and forwards the processed transaction to a payer.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Key Rules Section -->
+        <section id="key-rules" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📜 HIPAA Compliance Rules</h2>
+            
+            <div class="glass-card">
+              <h3>Key Points of HIPAA Rules</h3>
+              <ul style="margin-top: 24px;">
+                <li><strong>Privacy Rule:</strong> Regulates the use and disclosure of PHI</li>
+                <li><strong>Security Rule:</strong> Physical, Technical, and Administrative security measures</li>
+                <li><strong>Enforcement Rule:</strong> Provides instruction for regulating liability and imposing penalties for violations</li>
+                <li><strong>Breach Notification Rule:</strong> Guidelines for how and when to report violations</li>
+                <li><strong>Omnibus Rule:</strong> Outlines how CE or BA should handle PHI, enhance the privacy and security rules from unauthorized access or disclosure</li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">Deep Dive into the Rules</h3>
+            <div class="grid-2">
+              <div class="glass-card">
+                <h3>Privacy Rule</h3>
+                <ul style="font-size: 14px; margin-top: 16px;">
+                  <li>Protects patients’ medical records and PHI.</li>
+                  <li>Grants individuals rights over their health data (access, correction, restrictions).</li>
+                  <li>Limits use/disclosure of PHI without patient authorization.</li>
+                </ul>
+              </div>
+              <div class="glass-card">
+                <h3>Security Rule</h3>
+                <p style="font-size: 14px; color: var(--text-main);">Requires safeguards for ePHI (electronic PHI).</p>
+                <ul style="font-size: 14px;">
+                  <li><strong>Administrative:</strong> Risk analysis, workforce training, security policies.</li>
+                  <li><strong>Physical:</strong> Facility access controls, workstation/device security.</li>
+                  <li><strong>Technical:</strong> Encryption, access controls, audit logs, authentication.</li>
+                </ul>
+              </div>
+              <div class="glass-card">
+                <h3>Breach Notification Rule</h3>
+                <ul style="font-size: 14px; margin-top: 16px;">
+                  <li>Guidelines for how and when to report violations</li>
+                  <li>Requires notification to affected individuals, HHS, and sometimes media within 60 days of discovering a breach.</li>
+                </ul>
+              </div>
+              <div class="glass-card">
+                <h3>Enforcement Rule</h3>
+                <ul style="font-size: 14px; margin-top: 16px;">
+                  <li>Defines penalties for non-compliance (civil and criminal).</li>
+                  <li>include fines, corrective action plans, and in extreme cases, criminal charges</li>
+                  <li>Fines range from $100 to $50,000 per violation, with an annual cap of $1.5M+, depending on negligence level.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header" style="margin-top: 48px;">🌐 HITECH</h3>
+            <div class="glass-card">
+              <p><strong>The Health Information Technology for Economic and Clinical Health Act (HITECH)</strong> - It was designed to promote the adoption and meaningful use of health information technology (HIT) and electronic health records (EHRs) in the United States healthcare system. Introduced under the ARRA (American Recovery and Reinvestment Act) to strengthen HIPAA and promote adoption of health IT.</p>
+              <p style="color: var(--text-main); margin-top: 16px;">HIPAA lays the foundation for protecting patient data, while HITECH strengthened enforcement and accelerated secure adoption of digital health technologies like EHRs. Together, they ensure that compliance and security remain central to U.S. healthcare operations.</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Checklist Section -->
+        <section id="checklist" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">✅ HIPAA Compliance Checklist</h2>
+            <p style="margin-bottom: 32px; font-size: 18px; color: var(--text-muted);">For Software Development Team</p>
+            
+            <div class="checklist-grid">
+              <div class="check-item">
+                <div class="check-icon">📖</div>
+                <div class="check-content">
+                  <h4>Understand HIPAA Regulations</h4>
+                  <p>Familiarize yourself and your team with HIPAA</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🔑</div>
+                <div class="check-content">
+                  <h4>Implement Access Controls</h4>
+                  <p>access to PHI is restricted to authorized personnel only.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🔐</div>
+                <div class="check-content">
+                  <h4>Data Encryption</h4>
+                  <p>Use encryption techniques for securing databases, file storage, and backups.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">📝</div>
+                <div class="check-content">
+                  <h4>Audit Trails</h4>
+                  <p>Implement audit logging- audit logs are secure, tamper-proof, and regularly reviewed.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🛡️</div>
+                <div class="check-content">
+                  <h4>Secure Development Practices</h4>
+                  <p>Secure coding practices and update software libraries and dependencies regularly</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">📉</div>
+                <div class="check-content">
+                  <h4>Data Minimization</h4>
+                  <p>Implement data anonymization and pseudonymization techniques to reduce the risk associated with storing PHI.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">📡</div>
+                <div class="check-content">
+                  <h4>Secure Transmission of Data</h4>
+                  <p>Secure communication protocols (e.g., HTTPS) for transmitting PHI over networks.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🤝</div>
+                <div class="check-content">
+                  <h4>Business Associate Agreements (BAAs)</h4>
+                  <p>sign a Business Associate Agreement (BAA) outlining responsibilities for protecting PHI.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">♻️</div>
+                <div class="check-content">
+                  <h4>Disaster Recovery and Contingency Planning</h4>
+                  <p>in the event of a data breach or system failure. Regularly backup PHI and test the restoration process.</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🎓</div>
+                <div class="check-content">
+                  <h4>Employee Training and Awareness</h4>
+                  <p>Provide comprehensive training to employees, regular updation of policies and compliance requirements</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🔍</div>
+                <div class="check-content">
+                  <h4>Regular Security Assessments</h4>
+                  <p>Conduct regular security assessments, penetration testing, and vulnerability scans, org. wide risk assessment</p>
+                </div>
+              </div>
+              <div class="check-item">
+                <div class="check-icon">🚨</div>
+                <div class="check-content">
+                  <h4>Incident Response Plan</h4>
+                  <p>response plan outlining procedures for responding to security incidents, data breaches, and unauthorized disclosures of PHI.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Violations Section -->
+        <section id="violations" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🚨 Violation & Penalty Structure</h2>
+            
+            <!-- Real World Statistics Card added -->
+            <div class="glass-card" style="border-left: 4px solid var(--cyber-alert);">
+              <h3>Real-World Impact</h3>
+              <p style="font-size: 18px; font-weight: 600; color: var(--cyber-alert);">Last year 15,000 violations were reported.</p>
+              <div style="background: rgba(244, 63, 94, 0.1); padding: 16px; border-radius: 8px; margin-top: 16px; border: 1px solid rgba(244, 63, 94, 0.2);">
+                <strong class="theme-text-white">Real Incident:</strong><br>
+                <p style="margin-top: 8px; margin-bottom: 0;">In one incident, a thief used stolen medical records to impersonate a patient and rack up over $20,000 in medical bills in that patient’s name. The victim was still dealing with the fallout 15 years later, worrying that hospital records might list the thief’s blood type instead of his own.</p>
+              </div>
+            </div>
+
+            <div class="glass-card alert-card">
+              <h3>HIPAA Violation</h3>
+              <p style="font-size: 16px; color: var(--text-main);">A HIPAA violation is when a HIPAA-covered entity or a business associate fails to comply with one or more of the provisions of the HIPAA Privacy, Security, or Breach Notification Rules.</p>
+              
+              <div class="verbatim-list" style="margin-top: 24px;">
+                <span class="verbatim-item">Failure to perform an organization-wide risk analysis</span>
+                <span class="verbatim-item">Failure to enter into a HIPAA-compliant business associate agreement</span>
+                <span class="verbatim-item">Wrongful disclosures of PHI or failure to safeguard PHI</span>
+                <span class="verbatim-item">Delayed breach notifications</span>
+                <span class="verbatim-item">A health care employee accidentally viewing the records of a patient.</span>
+                <span class="verbatim-item">Accessing PHI with intent to sell it for profit or personal gain.</span>
+                <span class="verbatim-item">A staff member discusses treatment plans with a patient in a waiting room or in front of other people without the patient’s permission.</span>
+              </div>
+              
+              <h4 style="margin-top: 32px; margin-bottom: 16px; color: var(--text-main); font-size: 18px;">Besides human error, other common violations are:</h4>
+              <div class="verbatim-list" style="margin-top: 12px;">
+                <span class="verbatim-item">Lack of encryption</span>
+                <span class="verbatim-item">Data breaches caused by a security hack or phishing attack</span>
+                <span class="verbatim-item">Unauthorized access</span>
+                <span class="verbatim-item">Improper disposal of records</span>
+                <span class="verbatim-item">Loss or theft of devices</span>
+              </div>
+
+              <div class="highlight-box" style="margin-top: 32px; border-left: 4px solid var(--cyber-alert);">
+                <h4 class="theme-text-white" style="margin: 0 0 12px 0; font-size: 18px;">OCR determines a number of factors when determining penalties such as</h4>
+                <ul style="margin: 0; padding-left: 20px; color: var(--text-muted);">
+                  <li>the length of time a violation was allowed to persist</li>
+                  <li>the number of people affected</li>
+                  <li>the nature of the data exposed</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">💰 Penalty Structure (decided by OCR)</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Penalty Tier</th>
+                    <th>Culpability</th>
+                    <th>Minimum Penalty per Violation – Inflation Adjusted</th>
+                    <th>Max Penalty per Violation – Inflation Adjusted</th>
+                    <th>Imprisonment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Tier 1</strong></td>
+                    <td>Lack of Knowledge</td>
+                    <td>$137</td>
+                    <td>$68,928</td>
+                    <td>Up to 1 year in jail</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tier 2</strong></td>
+                    <td>Reasonable Cause</td>
+                    <td>$1,379</td>
+                    <td>$68,928</td>
+                    <td>Up to 5 years in jail</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tier 3</strong></td>
+                    <td>Willful Neglect</td>
+                    <td>$13,785</td>
+                    <td>$68,928</td>
+                    <td>Up to 10 years in jail</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tier 4</strong></td>
+                    <td>Willful Neglect (not corrected within 30 days)</td>
+                    <td>$68,928</td>
+                    <td>$2,067,813</td>
+                    <td>Up to 10 years in jail</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tier Explanations Added Here -->
+            <h3 class="subsection-header" style="margin-top: 40px;">Tier Breakdown &amp; Real Examples</h3>
+            <div class="grid-2">
+              <div class="glass-card">
+                <h4 style="color: var(--cyber-teal); font-size: 20px; margin-top: 0;">Tier 1</h4>
+                <p>A violation that the covered entity was unaware of and could not have realistically avoided.</p>
+                <div style="background: rgba(14, 165, 233, 0.1); padding: 12px; border-radius: 6px; margin-top: 12px;">
+                  <strong style="color: var(--cyber-teal);">Example:</strong> Car stolen having medical record laptop.
+                </div>
+              </div>
+              <div class="glass-card">
+                <h4 style="color: var(--cyber-teal); font-size: 20px; margin-top: 0;">Tier 2</h4>
+                <p>Violation should have been known but not avoided.</p>
+                <div style="background: rgba(14, 165, 233, 0.1); padding: 12px; border-radius: 6px; margin-top: 12px;">
+                  <strong style="color: var(--cyber-teal);">Example:</strong> Sending record to unencrypted message platform.
+                </div>
+              </div>
+              <div class="glass-card">
+                <h4 style="color: var(--cyber-teal); font-size: 20px; margin-top: 0;">Tier 3</h4>
+                <p>Willful neglect where correction attempt was made.</p>
+                <div style="background: rgba(14, 165, 233, 0.1); padding: 12px; border-radius: 6px; margin-top: 12px;">
+                  <strong style="color: var(--cyber-teal);">Example:</strong> Discussing treatment plan with co-nursing.
+                </div>
+              </div>
+              <div class="glass-card">
+                <h4 style="color: var(--cyber-teal); font-size: 20px; margin-top: 0;">Tier 4</h4>
+                <p>Willful neglect with no correction within 30 days.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Avoiding Violations Section -->
+        <section id="avoiding" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🛡️ How to avoid HIPAA Violation</h2>
+            
+            <div class="grid-2">
+              <div class="glass-card">
+                <p>To comply with the HIPAA Security Rule, the CDC requires all covered entities to:</p>
+                <ul style="margin-top: 16px;">
+                  <li>Ensure the confidentiality, integrity, and availability of all electronic PHI (ePHI).</li>
+                  <li>Detect and safeguard against anticipated threats to the security of the information.</li>
+                  <li>Protect against anticipated impermissible uses or disclosures.</li>
+                  <li>Certify compliance by their workforce.</li>
+                  <!-- Missing proper use/disposal added here -->
+                  <li>Proper use and disposal of PHI.</li>
+                  <li>Technical security.</li>
+                </ul>
+              </div>
+
+              <div class="glass-card" style="border-top-color: var(--cyber-teal); border-left-color: var(--cyber-teal);">
+                <p>Covered Entities (CEs) and Business Associates (BAs) must limit the use, disclosure, and access to PHI to the <strong>minimum necessary</strong> to accomplish the intended purpose.</p>
+                <div style="margin-top: 24px; padding: 16px; background: rgba(14, 165, 233, 0.1); border-radius: 8px;">
+                  <strong style="color: var(--cyber-teal);">Objective:</strong><br>
+                  <span style="color: var(--text-main); font-size: 14px;">Reduce unnecessary or excessive exposure of PHI, thereby lowering privacy/security risks.</span>
+                  <h4 class="theme-text-white" style="margin-top: 16px; margin-bottom: 0;">Minimum Necessary Rule- HIPAA</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ONC Cures Act -->
+        <section id="onc-cures" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🚀 ONC Cures Act Final Rule</h2>
+            
+            <div class="glass-card">
+              <p><strong>Issued by:</strong> Office of the National Coordinator for Health IT (ONC)</p>
+              <p><strong>Purpose:</strong> To give patients easier, faster, and more secure access to their electronic health information (EHI) and to promote interoperability between healthcare systems.</p>
+              <p style="color: var(--text-main); font-weight: 500;">
+                Empowering patients with control over their health data, promote innovation, and make healthcare systems more connected and transparent.
+              </p>
+            </div>
+
+            <h3 class="subsection-header">4 important Provisions of ONC Cures ACT, Final Rule</h3>
+            <p style="margin-bottom: 24px;">These provisions are specifically applicable for Health IT developers and healthcare providers</p>
+            <div class="grid-4">
+              <div class="glass-card" style="padding: 24px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px;">Information Blocking Prohibition</h3>
+                <p style="font-size:13px; margin:0;">To adopt the practices that enable patients to access their health information.</p>
+              </div>
+              <div class="glass-card" style="padding: 24px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px;">Interoperability</h3>
+                <p style="font-size:13px; margin:0;">Must implement standardized data exchange protocols to ensure seamless and secure sharing of EHI across different systems and platforms.</p>
+              </div>
+              <div class="glass-card" style="padding: 24px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px;">API functionality</h3>
+                <p style="font-size:13px; margin:0;">To implement APIs that allow patients to access and exchange their health information through third-party applications.</p>
+              </div>
+              <div class="glass-card" style="padding: 24px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px;">Certification</h3>
+                <p style="font-size:13px; margin:0;">To certify their products to ensure they meet the technical and functional requirements outlined in the rule.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Breach Reporting Details -->
+        <section id="breach-details" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">📣 Other HIPAA Rules</h2>
+            
+            <div class="glass-card">
+              <h3 style="color: var(--cyber-teal); font-size: 24px;">HITECH</h3>
+              <p style="font-size: 18px; color: var(--text-main);">Health Information Technology for Economic and Clinical Health Act</p>
+              
+              <div class="grid-2" style="margin-top: 32px;">
+                <div class="highlight-box-light" style="border-left: 4px solid var(--cyber-teal);">
+                  <h4 class="theme-text-white" style="margin: 0 0 12px 0; font-size: 18px;">TRAINING AND POLICIES</h4>
+                  <p style="margin: 0; color: var(--text-muted);">Training to employees who handle PHI and implement policies and procedures.</p>
+                </div>
+                <div class="highlight-box-light" style="border-left: 4px solid var(--cyber-blue);">
+                  <h4 class="theme-text-white" style="margin: 0 0 12px 0; font-size: 18px;">AUDITS AND ASSESSMENTS</h4>
+                  <p style="margin: 0; color: var(--text-muted);">Periodic audits and risk assessments are essential to identify vulnerabilities.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="subsection-header" style="margin-top: 48px;">Breach notification requirements:</h3>
+            <div class="glass-card">
+              <p>The following information should be provided when reporting a PHI breach to OCR:</p>
+              <div class="verbatim-list" style="margin-top: 12px;">
+                <span class="verbatim-item">Name</span>
+                <span class="verbatim-item">Full address</span>
+                <span class="verbatim-item">Telephone number (with area code)</span>
+                <span class="verbatim-item">Email address</span>
+                <span class="verbatim-item">Information on the organization or individual who you believed violated health information privacy rights</span>
+                <span class="verbatim-item">A description of how those privacy rights were violated</span>
+                <span class="verbatim-item">Your signature and the date of the complaint</span>
+              </div>
+              
+              <ul style="margin-top: 32px; color: var(--text-muted);">
+                <li>If ten (or fewer) people were exposed, written or telephone notice must be given to the affected parties.</li>
+                <li>If 500 (or more) people were exposed, businesses must notify the local media within 60 days.</li>
+                <li>In both cases, the company responsible for the breach must fill out an electronic breach form to report to The Secretary.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📋 SUMMARY</h2>
+            
+            <div class="grid-2">
+              <div class="glass-card">
+                <ul style="font-size:14px; margin-top: 16px;">
+                  <li><strong>Risk Analysis is mandatory</strong> under HIPAA/HITECH—ongoing evaluation of threats/vulnerabilities to PHI/ePHI.</li>
+                  <li><strong>Access control, Audit Logging, and Encryption</strong> are critical technical safeguards.</li>
+                  <li><strong>Workforce training</strong> is essential to prevent human error breaches.</li>
+                  <li><strong>Vendors (BAs)</strong> must sign Business Associate Agreements (BAAs) to ensure compliance.</li>
+                  <li><strong>Non-compliance risks:</strong> Hefty fines, reputational damage, loss of patient trust, and potential criminal charges.</li>
+                  <li>Reduce unnecessary or excessive exposure of PHI, thereby lowering privacy/security risks- <strong>MINIMUM NECESSARY RULE</strong></li>
+                </ul>
+              </div>
+              <div class="glass-card" style="display: flex; flex-direction: column;">
+                <ul style="font-size:14px; list-style-type: '⚡ '; flex: 1; margin-top: 16px;">
+                  <li><strong>Access Control</strong> = Who can get the access ? (Limit to minimum necessary).</li>
+                  <li><strong>Audit Logging</strong> = Who did what, when, and why? (Track and monitor).</li>
+                  <li><strong>Data Provenance</strong> = Where did the data come from and how did it change over time?</li>
+                  <li><strong>Auditability</strong> = Who touched the data, when, and what did they do?</li>
+                </ul>
+                <div class="formula-box" style="margin-bottom: 24px;">
+                  Data Provenance + Auditability = Integrity &amp; Trust
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q&A Section -->
+        <section id="qa" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🤔 Questions for you</h2>
+            <div class="glass-card" style="border-color: var(--cyber-blue);">
+              <ol style="font-size: 18px; line-height: 2; color: var(--text-main); margin-left: 20px;">
+                <li>If an employee accesses thousands of patient records, how should the system detect it?</li>
+                <li>How can least-privilege access prevent insider threats?</li>
+                <li>What should IT do if suspicious access is detected?</li>
+                <li>What role does audit logging play in HIPAA compliance?</li>
+              </ol>
+            </div>
+            
+            <div class="glass-card" style="text-align: center; margin-top: 48px; background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(59, 130, 246, 0.05)); border-color: var(--cyber-teal);">
+              <h3 style="margin-top:0; font-size: 32px; letter-spacing: 2px;">THANK YOU!</h3>
+              <p style="font-size: 18px; margin-bottom: 8px;">Do you have any questions?</p>
+              <p style="font-size: 14px; color: var(--text-muted);">Connect me here</p>
+              <a href="mailto:Shivani.jain@mindbowser.com" style="color: #fff; font-weight: 600; text-decoration: none; font-size: 18px; display: inline-block; padding: 12px 24px; background: var(--brand-primary); border-radius: 8px; margin-top: 12px; transition: transform 0.2s;">
+                Shivani.jain@mindbowser.com
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer class="footer">
+      &copy; 2026 Healthcare COE | Mindbowser Documentation
+    </footer>
+  </div>
+
+  <script>
+    function startJourney() {
+      const landing = document.getElementById('landing-page');
+      const layout = document.getElementById('app-layout');
+      landing.style.opacity = '0';
+      setTimeout(() => {
+        landing.style.display = 'none';
+        layout.classList.add('active');
+      }, 500);
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-btn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeBtn.innerHTML = '🌙 Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '☀️ Light Mode';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.sidebar a');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 150) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
