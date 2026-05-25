@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthcare Provider Markets - Advanced Guide</title>
+  <link rel="icon" type="image/png" href="https://www.mindbowser.com/wp-content/uploads/2025/10/512x512-1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+  <script src="https://code.highcharts.com/modules/sankey.js"></script>
+  <script src="https://code.highcharts.com/modules/organization.js"></script>
+  <style>
+    :root {
+      --brand-primary: #7133AE;
+      --brand-secondary: #5d2a90;
+      --brand-accent: #38b8b3;
+      --brand-light: rgba(113, 51, 174, 0.18);
+
+      --bg-landing: #1a1e2e;
+      --bg-1: #0b0713;
+      --bg-2: #150f22;
+      --text-main: rgba(255, 255, 255, 0.9);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --sidebar-bg: rgba(15, 10, 25, 0.98);
+      --header-bg: rgba(15, 10, 25, 0.98);
+      --table-header: rgba(113, 51, 174, 0.2);
+      --logo-filter: none;
+      --theme-btn-bg: rgba(255, 255, 255, 0.1);
+      --theme-btn-hover: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="light"] {
+      --bg-landing: #e2e8f0;
+      --bg-1: #ffffff;
+      --bg-2: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --sidebar-bg: #f8fafc;
+      --header-bg: #ffffff;
+      --table-header: rgba(113, 51, 174, 0.15);
+      --logo-filter: invert(1) hue-rotate(180deg);
+      --theme-btn-bg: rgba(0, 0, 0, 0.05);
+      --theme-btn-hover: rgba(0, 0, 0, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-1);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Landing Page */
+    #landing-page {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        linear-gradient(135deg, rgba(11, 7, 19, 0.92), rgba(26, 17, 44, 0.85)),
+        url('images/cover-bg.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    [data-theme="light"] #landing-page {
+      background:
+        linear-gradient(135deg, rgba(241, 245, 249, 0.92), rgba(226, 232, 240, 0.85)),
+        url('images/cover-bg.png') center/cover no-repeat;
+    }
+
+    .landing-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+    }
+
+    .landing-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .landing-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #fff;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(113, 51, 174, 0.4);
+    }
+
+    .landing-features {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 64px;
+      color: var(--text-muted);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+    .landing-features span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* App Layout */
+    #app-layout {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    #app-layout.active {
+      display: flex;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .header .logo {
+      height: 24px;
+      filter: var(--logo-filter);
+      transition: filter 0.3s ease;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: var(--theme-btn-bg);
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid var(--border-color);
+      transition: all 0.2s;
+    }
+    .back-link:hover {
+      background: var(--theme-btn-hover);
+    }
+
+    .theme-toggle {
+      background: var(--theme-btn-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--theme-btn-hover);
+    }
+
+    .layout-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      position: fixed;
+      top: 60px; bottom: 0; left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .sidebar h4 {
+      color: var(--brand-primary);
+      margin: 0 0 16px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+    [data-theme="dark"] .sidebar a:hover, [data-theme="dark"] .sidebar a.active {
+      color: #fff;
+    }
+
+    /* Main */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section {
+      padding: 64px 80px;
+      scroll-margin-top: 60px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section.bg-1 { background-color: var(--bg-1); }
+    .section.bg-2 { background-color: var(--bg-2); }
+
+    .section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Section Headers */
+    .section-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .subsection-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 32px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lead {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      max-width: 900px;
+    }
+
+    /* Content Boxes */
+    .content-box {
+      background: #140d21;
+      color: #f1f5f9;
+      border: 1px solid rgba(113, 51, 174, 0.4);
+      border-left: 4px solid var(--brand-accent);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .content-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(113, 51, 174, 0.2);
+    }
+    .content-box h3 { color: #ffffff; margin-top: 0; font-family: 'Outfit', sans-serif; font-size: 18px; }
+    .content-box h4 { color: #ffffff; margin: 14px 0 8px; font-size: 15px; }
+    .content-box p { line-height: 1.7; margin-bottom: 12px; color: #e2e8f0; font-size: 14px; }
+    .content-box ul { padding-left: 20px; line-height: 1.7; color: #e2e8f0; font-size: 14px; margin: 0; }
+    .content-box li { margin-bottom: 8px; }
+    .content-box strong { color: #ffffff; }
+
+    /* Stat tiles */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-tile {
+      background: linear-gradient(135deg, rgba(113, 51, 174, 0.18), rgba(56, 184, 179, 0.12));
+      border: 1px solid rgba(113, 51, 174, 0.35);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--brand-accent);
+      display: block;
+      margin-bottom: 6px;
+    }
+    [data-theme="light"] .stat-value { color: var(--brand-primary); }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+    /* Tables */
+    .data-table-wrapper {
+      background: var(--bg-1);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); line-height: 1.6; font-size: 14px; }
+    th {
+      background: var(--table-header);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(113, 51, 174, 0.06); }
+
+    /* Interactive list */
+    .interactive-list { list-style: none; padding: 0; margin: 0; }
+    .interactive-list li {
+      padding: 14px 16px;
+      background: #1a1429;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: 3px solid var(--brand-accent);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .interactive-list li:hover {
+      border-left: 4px solid var(--brand-primary);
+      transform: translateX(4px);
+    }
+    [data-theme="light"] .interactive-list li {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--brand-accent);
+    }
+
+    /* Provider type cards */
+    .provider-card {
+      background: #140d21;
+      border: 1px solid rgba(113, 51, 174, 0.35);
+      border-radius: 12px;
+      padding: 22px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .provider-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(113, 51, 174, 0.25);
+    }
+    .provider-card .pc-icon {
+      font-size: 28px;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    }
+    .provider-card h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      margin: 4px 0 0;
+      color: #ffffff;
+    }
+    .provider-card p { font-size: 13px; color: #cbd5e1; margin: 0; line-height: 1.65; }
+    .provider-card .pc-meta {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pc-chip {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(56, 184, 179, 0.15);
+      color: var(--brand-accent);
+      border: 1px solid rgba(56, 184, 179, 0.35);
+      font-weight: 600;
+    }
+    [data-theme="light"] .provider-card { background: #ffffff; }
+    [data-theme="light"] .provider-card h4 { color: var(--text-main); }
+    [data-theme="light"] .provider-card p { color: var(--text-muted); }
+
+    /* Workflow steps */
+    .workflow-list {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .workflow-list li {
+      counter-increment: step;
+      position: relative;
+      padding: 14px 16px 14px 56px;
+      background: #1a1429;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 10px;
+      color: #e2e8f0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .workflow-list li::before {
+      content: counter(step);
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #fff;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+    }
+    [data-theme="light"] .workflow-list li {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Callout */
+    .callout {
+      background: linear-gradient(135deg, rgba(113, 51, 174, 0.15), rgba(56, 184, 179, 0.10));
+      border: 1px solid rgba(113, 51, 174, 0.35);
+      border-left: 4px solid var(--brand-primary);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: var(--text-main);
+      line-height: 1.7;
+    }
+    .callout strong { color: var(--brand-primary); }
+
+    /* Illustration / image blocks */
+    .illustration {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto 24px;
+      display: block;
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    [data-theme="dark"] .illustration {
+      background: rgba(255,255,255,0.96);
+    }
+    .illustration img { width: 100%; height: auto; display: block; }
+    .illustration-caption {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* PPT-style icon row */
+    .icon-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 16px 0 28px;
+    }
+    .icon-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    [data-theme="dark"] .icon-card { background: #ffffff; color: var(--slate-800); }
+    .icon-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(113,51,174,0.20); }
+    .icon-card img {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+      margin: 0 auto 12px;
+      display: block;
+    }
+    .icon-card h4 {
+      margin: 0 0 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      color: #0f172a;
+    }
+    .icon-card p {
+      margin: 0;
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    /* Stakeholder diagram (CSS-built) */
+    .stakeholder-diagram {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 1 / 0.85;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, rgba(113, 51, 174, 0.08), rgba(56, 184, 179, 0.06));
+      border: 1px solid rgba(113, 51, 174, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .stakeholder-node {
+      position: absolute;
+      width: 140px;
+      padding: 12px 14px;
+      background: #ffffff;
+      border: 2px solid var(--brand-primary);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+      box-shadow: 0 6px 16px rgba(113,51,174,0.25);
+    }
+    .stakeholder-node.center {
+      width: 160px;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #ffffff;
+      border-color: var(--brand-secondary);
+      box-shadow: 0 8px 24px rgba(113,51,174,0.45);
+    }
+    .stakeholder-node small {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 4px;
+      color: #475569;
+    }
+    .stakeholder-node.center small { color: rgba(255,255,255,0.85); }
+    .stakeholder-node .ic {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .stk-top { top: 4%; left: 50%; transform: translateX(-50%); }
+    .stk-left { top: 38%; left: 4%; }
+    .stk-right { top: 38%; right: 4%; }
+    .stk-bl { bottom: 4%; left: 16%; }
+    .stk-br { bottom: 4%; right: 16%; }
+    .stk-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .stk-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    @media (max-width: 768px) {
+      .stakeholder-diagram { aspect-ratio: auto; }
+      .stakeholder-node { position: static; width: 100%; transform: none; margin-bottom: 10px; }
+      .stk-svg { display: none; }
+    }
+
+    /* PPT workflow diagram (numbered + columns) */
+    .pptflow {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      overflow-x: auto;
+    }
+    .pptflow-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 16px;
+      text-align: center;
+    }
+    .pptflow-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .pptflow-node {
+      position: relative;
+      background: linear-gradient(135deg, #7133AE, #5d2a90);
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 14px 10px 14px 36px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: left;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+    }
+    .pptflow-node.accent {
+      background: linear-gradient(135deg, #38b8b3, #2a8b87);
+    }
+    .pptflow-node.muted {
+      background: #ffffff;
+      color: #0f172a;
+      border: 2px solid #7133AE;
+    }
+    .pptflow-node .num {
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      background: rgba(255,255,255,0.92);
+      color: #7133AE;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .pptflow-node.muted .num {
+      background: #7133AE;
+      color: #ffffff;
+    }
+    .pptflow-arrow {
+      text-align: center;
+      color: #7133AE;
+      font-size: 20px;
+      margin: -4px 0 10px;
+    }
+    .pptflow-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #475569;
+    }
+    .pptflow-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pptflow-legend i {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    @media (max-width: 768px) {
+      .pptflow-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Hero image */
+    .hero-image-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+    .hero-image-row img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    @media (max-width: 768px) {
+      .hero-image-row { grid-template-columns: 1fr; }
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border-color);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .section { padding: 48px; }
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .section { padding: 32px 24px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <div class="landing-content">
+      <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser Logo" style="height: 36px; margin-bottom: 32px; filter: grayscale(100%) brightness(1000%); transition: filter 0.3s ease;">
+      <h1 class="landing-title">Healthcare Provider Markets</h1>
+      <p class="landing-subtitle">An advanced reference covering provider segments, care settings, clinical operations, and workflows that power the US healthcare delivery system.</p>
+
+      <button class="btn-start" onclick="startJourney()">
+        <span>🏥</span> Explore Provider Markets &rarr;
+      </button>
+
+      <div class="landing-features">
+        <span>👨‍⚕️ Provider Segments</span>
+        <span>🏨 Care Settings</span>
+        <span>⚙️ Clinical Workflows</span>
+        <span>📋 Operations & Billing</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div id="app-layout">
+    <header class="header">
+      <a href="#">
+        <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser" class="logo" />
+      </a>
+      <div class="header-right">
+        <a class="back-link" href="../index.html">
+          <span>&larr;</span> Back to Deck
+        </a>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+          ☀️ Light Mode
+        </button>
+      </div>
+    </header>
+
+    <div class="layout-wrapper">
+      <aside class="sidebar">
+        <h4>Contents</h4>
+        <ul id="nav-links">
+          <li><a href="#overview" class="active">System Overview</a></li>
+          <li><a href="#professionals">Healthcare Professionals</a></li>
+          <li><a href="#settings">Patient & Care Settings</a></li>
+          <li><a href="#ambulatory">Ambulatory Care</a></li>
+          <li><a href="#officeflow">Physician Office Flow</a></li>
+          <li><a href="#acute">Acute Care & Hospitals</a></li>
+          <li><a href="#specialty">Specialty Hospital Services</a></li>
+          <li><a href="#longterm">Long-Term Care</a></li>
+          <li><a href="#chronic">Chronic Disease Mgmt</a></li>
+          <li><a href="#workflows">Workflows & Processes</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+
+        <!-- Overview -->
+        <section id="overview" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🏥 Healthcare Provider System Overview</h2>
+            <p class="lead">The US provider landscape is a hybrid public-private network that delivers care to <strong>330+ million</strong> people through hospitals, physician practices, ambulatory facilities, and long-term care. Together, these entities sit at the center of the largest, most complex healthcare market in the world.</p>
+
+            <div class="stat-grid">
+              <div class="stat-tile">
+                <span class="stat-value">$4.9T</span>
+                <span class="stat-label">Annual Spend (~17.6% GDP)</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-value">6,120</span>
+                <span class="stat-label">Hospitals</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-value">1.1M</span>
+                <span class="stat-label">Active Physicians</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-value">5.2M</span>
+                <span class="stat-label">Registered Nurses</span>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🕸️ Provider Market Stakeholder Model</h3>
+            <p class="lead" style="margin-bottom: 16px;">The patient sits at the center of the ecosystem. Every other stakeholder — payers, providers, life sciences, and suppliers — connects through the patient relationship.</p>
+            <div class="stakeholder-diagram">
+              <svg class="stk-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7133AE"/></marker>
+                </defs>
+                <line x1="50" y1="22" x2="50" y2="42" stroke="#7133AE" stroke-width="0.6" stroke-dasharray="2 2" marker-end="url(#arr)"/>
+                <line x1="22" y1="50" x2="42" y2="50" stroke="#7133AE" stroke-width="0.6" stroke-dasharray="2 2" marker-end="url(#arr)"/>
+                <line x1="78" y1="50" x2="58" y2="50" stroke="#7133AE" stroke-width="0.6" stroke-dasharray="2 2" marker-end="url(#arr)"/>
+                <line x1="30" y1="86" x2="44" y2="62" stroke="#7133AE" stroke-width="0.6" stroke-dasharray="2 2" marker-end="url(#arr)"/>
+                <line x1="70" y1="86" x2="56" y2="62" stroke="#7133AE" stroke-width="0.6" stroke-dasharray="2 2" marker-end="url(#arr)"/>
+              </svg>
+              <div class="stakeholder-node stk-top"><span class="ic">💳</span>Payers<small>Commercial · CMS · Self-insured</small></div>
+              <div class="stakeholder-node stk-left"><span class="ic">🏥</span>Providers<small>Hospitals · Physicians · APPs</small></div>
+              <div class="stakeholder-node stk-right"><span class="ic">💊</span>Pharmaceuticals<small>Drugs · Biologics · PBMs</small></div>
+              <div class="stakeholder-node stk-bl"><span class="ic">🧰</span>Medical Suppliers<small>Devices · DME · Lab</small></div>
+              <div class="stakeholder-node stk-br"><span class="ic">⚖️</span>Regulators<small>FDA · CMS · State DOH</small></div>
+              <div class="stakeholder-node center stk-center"><span class="ic">🧍</span>Patient<small>Center of Care</small></div>
+            </div>
+
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🏛️ Healthcare System Architecture</h3>
+                <p>A hybrid public-private model combining government programs (Medicare, Medicaid, VA, TRICARE), employer-sponsored and individual private insurance, and out-of-pocket payment. The result is broad coverage with significant gaps.</p>
+                <ul>
+                  <li>~32% of spend on hospital care</li>
+                  <li>~21% on physician & clinical services</li>
+                  <li>~9% on prescription drugs</li>
+                  <li>Geographic & demographic disparities persist</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🤝 Major Stakeholders</h3>
+                <p>The ecosystem connects patients, providers, payers, life sciences companies, regulators, and intermediaries — each with distinct incentives.</p>
+                <ul>
+                  <li><strong>Patients</strong> — end users of services</li>
+                  <li><strong>Providers</strong> — MDs, DOs, NPs, PAs, RNs, allied</li>
+                  <li><strong>Facilities</strong> — hospitals, clinics, ASCs, SNFs</li>
+                  <li><strong>Payers</strong> — CMS, commercial, employers</li>
+                  <li><strong>Regulators</strong> — CMS, FDA, state DOH, TJC</li>
+                  <li><strong>Intermediaries</strong> — EHRs, HIEs, RCM, PBMs</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>⭐ Quality & Outcomes</h3>
+                <p>Modern provider performance is judged on safety, clinical effectiveness, experience, and efficiency. These metrics drive reimbursement, accreditation, and consumer choice.</p>
+                <ul>
+                  <li><strong>HCAHPS</strong> impacts Medicare payments</li>
+                  <li>30-day readmissions penalize hospitals</li>
+                  <li>Star Ratings shape plan & provider choice</li>
+                  <li>Value-based care tie payment to outcomes</li>
+                  <li>Public reporting on Medicare Care Compare</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Professionals -->
+        <section id="professionals" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">👨‍⚕️ Healthcare Professionals & Practitioners</h2>
+            <p class="lead">Provider markets are defined by the workforce that delivers care. Understanding training pathways, scope of practice, and supply dynamics is essential for any partner building products, services, or policies for clinical end users.</p>
+
+            <div class="grid-3">
+              <div class="provider-card">
+                <div class="pc-icon">🩺</div>
+                <h4>Physicians (MD & DO)</h4>
+                <p>Allopathic (MD) and osteopathic (DO) doctors complete 4 years of medical school plus 3–7 years of residency. Both can practice in every specialty; DOs additionally train in osteopathic manipulative treatment.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">~1.1M Active</span>
+                  <span class="pc-chip">11–15 yrs Training</span>
+                  <span class="pc-chip">State Licensed</span>
+                </div>
+              </div>
+              <div class="provider-card">
+                <div class="pc-icon">🏠</div>
+                <h4>Primary Care Physicians</h4>
+                <p>Family medicine, internal medicine, pediatrics, and geriatrics. Serve as the medical home — managing chronic disease, prevention, and specialist coordination. Frequently the gatekeeper in managed care.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">2,000–2,500 Panel</span>
+                  <span class="pc-chip">15–25 min Visits</span>
+                  <span class="pc-chip">PCP Shortage</span>
+                </div>
+              </div>
+              <div class="provider-card">
+                <div class="pc-icon">📋</div>
+                <h4>Nurse Practitioners (NP)</h4>
+                <p>Graduate-trained advanced practice nurses who diagnose, prescribe, and manage patient panels. Full practice authority in 27+ states. Often lead primary care in rural and underserved areas.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">385,000+ NPs</span>
+                  <span class="pc-chip">88% in Primary Care</span>
+                  <span class="pc-chip">Fastest Growing</span>
+                </div>
+              </div>
+              <div class="provider-card">
+                <div class="pc-icon">🧑‍⚕️</div>
+                <h4>Physician Assistants (PA)</h4>
+                <p>Medical-model-trained APPs working in collaboration with physicians across surgery, primary care, EM, and specialties. Master's-level training (24–27 months) with rotational clinical experience.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">170,000+ PAs</span>
+                  <span class="pc-chip">~7% Yearly Growth</span>
+                  <span class="pc-chip">Multi-specialty</span>
+                </div>
+              </div>
+              <div class="provider-card">
+                <div class="pc-icon">💉</div>
+                <h4>Nurses (RN & LPN)</h4>
+                <p>The largest healthcare profession. RNs lead direct bedside, ICU, ED, OR, and home care; LPNs provide supportive care in SNFs and clinics. Advanced practice tracks include CRNA, CNM, and CNS.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">5.2M RNs</span>
+                  <span class="pc-chip">650K LPNs</span>
+                  <span class="pc-chip">Shortage Crisis</span>
+                </div>
+              </div>
+              <div class="provider-card">
+                <div class="pc-icon">🧪</div>
+                <h4>Allied Health Professionals</h4>
+                <p>5M+ credentialed professionals across imaging, lab, respiratory, surgical tech, pharmacy tech, EMTs, therapists, and more. Critical to diagnostic and therapeutic throughput.</p>
+                <div class="pc-meta">
+                  <span class="pc-chip">5M+ Workforce</span>
+                  <span class="pc-chip">60% of Care Team</span>
+                  <span class="pc-chip">Cert. Driven</span>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">💼 Provider Compensation & Workforce Trends</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Provider Type</th>
+                    <th>Avg. Compensation</th>
+                    <th>Active Workforce</th>
+                    <th>Key Trend</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Primary Care Physician</td><td>$265K – $310K</td><td>~210,000</td><td>Shortage projected: 17K–48K by 2034</td></tr>
+                  <tr><td>Specialist Physician</td><td>$360K – $720K</td><td>~890,000</td><td>Procedural specialties highest paid</td></tr>
+                  <tr><td>Nurse Practitioner</td><td>$120K – $150K</td><td>385,000+</td><td>Expanding scope of practice</td></tr>
+                  <tr><td>Physician Assistant</td><td>$115K – $145K</td><td>170,000+</td><td>Growing in surgery & EM</td></tr>
+                  <tr><td>Registered Nurse</td><td>$80K – $110K</td><td>5.2M</td><td>Shortage of 195K by 2031</td></tr>
+                  <tr><td>Hospitalist</td><td>$295K – $345K</td><td>~50,000</td><td>Dominant inpatient model</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="settings" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🚪 Patient Classification & Care Settings</h2>
+            <p class="lead">Care setting and patient status drive coverage, documentation, reimbursement, and workflow. Knowing the differences between outpatient, observation, and inpatient is foundational to compliant operations.</p>
+
+            <h3 class="subsection-header">📖 Key Nomenclature</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Term</th><th>Definition</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Providers</strong></td><td>Professionals engaged in the delivery of health services — Physicians, Dentists, Nurses, Podiatrists, Optometrists, Clinical Psychologists. Hospitals and long-term care facilities are also providers.</td></tr>
+                  <tr><td><strong>Physician</strong></td><td>Medical practitioner / doctor of medicine. "Doctor" is not commonly used as a stand-alone term in US clinical settings.</td></tr>
+                  <tr><td><strong>Primary Care Physician (PCP)</strong></td><td>Monitors patient health, treats most common problems, and refers to specialists when needed. Manages all aspects of care for a health plan member. Also called family physician.</td></tr>
+                  <tr><td><strong>Vital Signs</strong></td><td>Body temperature, pulse, blood pressure, respiratory rate, SpO₂ — taken to assess the most basic body functions.</td></tr>
+                  <tr><td><strong>Outpatient</strong></td><td>Individual who is not hospitalized overnight but visits a hospital, clinic, or facility for diagnosis and treatment.</td></tr>
+                  <tr><td><strong>Inpatient</strong></td><td>Individual whose condition requires hospitalization and overnight stay.</td></tr>
+                  <tr><td><strong>Patient Demographics</strong></td><td>Identity attributes captured at registration — Name, Gender, Address, DOB, insurance, MRN.</td></tr>
+                  <tr><td><strong>Hospice Care</strong></td><td>Supportive care for terminally ill patients in the final phase of illness — focused on comfort and quality of life rather than cure.</td></tr>
+                  <tr><td><strong>Home Health Care</strong></td><td>Services delivered at home to aged, disabled, sick, or convalescent individuals not needing institutional care.</td></tr>
+                  <tr><td><strong>Critical Access Hospital</strong></td><td>Small, geographically remote hospital (≤25 beds) providing outpatient and inpatient services to rural communities under a special CMS designation.</td></tr>
+                  <tr><td><strong>Ancillary Services</strong></td><td>Professional support services such as laboratory tests and radiology exams — classified as diagnostic, therapeutic, or custodial.</td></tr>
+                  <tr><td><strong>Formulary Drug</strong></td><td>The list of drugs covered under a health insurer's prescription drug plan, with tiers driving copays.</td></tr>
+                  <tr><td><strong>E-Prescription</strong></td><td>Electronic transmission of prescriptions from EHR to pharmacy with automatic checks for allergies, drug interactions, and formulary compliance.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🚶 Outpatient / Ambulatory</h3>
+                <p>Care delivered without overnight stay. Accounts for <strong>75–80%</strong> of all encounters and continues to absorb procedures historically done inpatient.</p>
+                <ul>
+                  <li>Office visits: $100–$500</li>
+                  <li>Visit length: 20–45 minutes</li>
+                  <li>Includes infusions, scopes, minor surgery</li>
+                  <li>Lower infection risk, better satisfaction</li>
+                  <li>Migration drives ASC and HOPD growth</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🛏️ Inpatient Hospitalization</h3>
+                <p>Formal admission for 24+ hours requiring physician order. High cost, intensive workflow, and tight discharge planning.</p>
+                <ul>
+                  <li>Average LOS: 4.5 days</li>
+                  <li>Cost: $2,800–$3,500+ per day</li>
+                  <li>Pre-auth required for planned admits</li>
+                  <li>30-day readmits penalized under HRRP</li>
+                  <li>Hospitalist + nursing-led care</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>👁️ Observation Status</h3>
+                <p>A billing/care category between ED and inpatient — used for 24–48 hour monitoring when admission criteria are unclear. Pays under Medicare Part B (not A).</p>
+                <ul>
+                  <li>Two-midnight rule guides admit vs obs</li>
+                  <li>Affects SNF post-acute eligibility</li>
+                  <li>Common for chest pain, syncope</li>
+                  <li>Dedicated observation units growing</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>📇 Demographics & MRN</h3>
+                <p>Standardized patient identity captured at every encounter. Critical for safety, billing, HIPAA, and interoperability.</p>
+                <ul>
+                  <li>Name, DOB, gender, address, insurance</li>
+                  <li>MRN (per facility), NPI (per provider)</li>
+                  <li>HIPAA-regulated PHI</li>
+                  <li>HIEs enable cross-system sharing</li>
+                  <li>Portal access standard under ONC rules</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🌡️ Vital Signs & Clinical Baselines</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vital Sign</th>
+                    <th>Normal Range (Adult)</th>
+                    <th>Abnormal / Action Threshold</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Blood Pressure</td><td>&lt;120/80 mmHg</td><td>≥140/90 hypertension; &lt;90/60 hypotension</td></tr>
+                  <tr><td>Heart Rate</td><td>60–100 bpm</td><td>&lt;60 bradycardia; &gt;100 tachycardia</td></tr>
+                  <tr><td>Temperature</td><td>97.0–99.0°F (36.1–37.2°C)</td><td>≥100.4°F fever; &lt;95°F hypothermia</td></tr>
+                  <tr><td>Respiratory Rate</td><td>12–20 breaths/min</td><td>&gt;20 distress; &lt;12 depression</td></tr>
+                  <tr><td>SpO₂</td><td>≥95% room air</td><td>&lt;92% concerning; &lt;88% critical (COPD differs)</td></tr>
+                  <tr><td>Pain (0–10 scale)</td><td>0–3 mild</td><td>≥7 severe — escalate management</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ambulatory -->
+        <section id="ambulatory" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🚶 Ambulatory & Outpatient Care Models</h2>
+            <p class="lead">Ambulatory care is the foundation of provider markets — where most patient encounters happen. The setting mix is shifting from hospital outpatient departments toward independent ASCs, retail clinics, and virtual care.</p>
+
+            <div class="icon-row">
+              <div class="icon-card">
+                <img src="images/hospital-shield.png" alt="Primary Care" />
+                <h4>Primary Care Clinics</h4>
+                <p>General health, prevention, and chronic disease management — diabetes, hypertension, well visits.</p>
+              </div>
+              <div class="icon-card">
+                <img src="images/pharmacy-store.png" alt="Retail Clinics" />
+                <h4>Retail Clinics</h4>
+                <p>In-store NP/PA-staffed clinics for minor illnesses, immunizations, and screenings — walk-in, low cost.</p>
+              </div>
+              <div class="icon-card">
+                <img src="images/doctor-ekg.png" alt="Urgent & Specialty Care" />
+                <h4>Urgent & Specialty Care</h4>
+                <p>Extended-hours urgent care and specialist clinics (cardiology, neuro, derm, ortho) beyond PCP scope.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🏠 Primary Care Clinics</h3>
+                <p>Solo practices, group practices, FQHCs, and large clinic networks. The medical home that anchors longitudinal patient relationships.</p>
+                <ul>
+                  <li>Panel size: 2,000–2,500 patients per PCP</li>
+                  <li>Same-day wait: 24–60 days in many markets</li>
+                  <li>EHR adoption: ~96%</li>
+                  <li>Value-based care now &gt;40% of revenue</li>
+                  <li>FQHCs serve 31M+ low-income patients</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🛒 Retail & Walk-in Clinics</h3>
+                <p>Convenient care embedded in pharmacies and stores (CVS MinuteClinic, Walgreens, Walmart Health). NP/PA-staffed, no-appointment model.</p>
+                <ul>
+                  <li>~2,800+ retail clinics nationwide</li>
+                  <li>Visits: 15–20 minutes; $60–$150</li>
+                  <li>Wait: 10–30 minutes typical</li>
+                  <li>Strong on acute minor, prevention, screenings</li>
+                  <li>Mixed: CVS/Walmart closures reshaping 2024+</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🚑 Urgent Care Centers</h3>
+                <p>Extended-hours acute care for non-emergencies — fractures, lacerations, infections, minor procedures. Bridges PCP and ED.</p>
+                <ul>
+                  <li>11,150+ centers in US; growing 7%/yr</li>
+                  <li>Hours: 8a–10p daily, weekends</li>
+                  <li>Visit: 30–60 min; cost $150–$300</li>
+                  <li>X-ray, sutures, splinting on-site</li>
+                  <li>Cannot manage stroke, MI, severe trauma</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🩺 Specialty Clinics</h3>
+                <p>Cardiology, oncology, ortho, neuro, rheum, GI, women's health, behavioral health. Referral-driven and procedure-heavy.</p>
+                <ul>
+                  <li>Visits: 30–60 minutes</li>
+                  <li>Specialist visit: $200–$500+</li>
+                  <li>Diagnostic workups + interventions</li>
+                  <li>Multidisciplinary tumor boards / clinics</li>
+                  <li>Telehealth specialty visits up 38× vs 2019</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🔪 Ambulatory Surgery Centers (ASCs)</h3>
+                <p>Single-day surgical facilities — cataracts, scopes, orthopedics, pain. ~40–50% cheaper than HOPD with comparable outcomes.</p>
+                <ul>
+                  <li>~6,200 Medicare-certified ASCs</li>
+                  <li>Top procedures: cataract, colonoscopy, knee scope</li>
+                  <li>Most are physician-owned or JV with health system</li>
+                  <li>Total joints now migrating to ASCs</li>
+                  <li>Recovery 1–3 hrs; same-day home</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>💻 Telehealth & Virtual Care</h3>
+                <p>Synchronous video, async messaging, and RPM — now a permanent layer of ambulatory care, especially in behavioral health and chronic management.</p>
+                <ul>
+                  <li>~25% of behavioral health is virtual</li>
+                  <li>RPM growing 25%+ YoY</li>
+                  <li>Medicare extended PHE flexibilities through 2025</li>
+                  <li>Hybrid care models becoming the norm</li>
+                  <li>Drives provider scalability & access</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Office Flow -->
+        <section id="officeflow" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">📋 Physician Office Workflow</h2>
+            <p class="lead">A typical office visit is a 10-step orchestrated workflow from scheduling to claim submission. Every step has a clinical, regulatory, and revenue implication.</p>
+
+            <div class="pptflow">
+              <p class="pptflow-title">Physician Office Workflow — Ambulatory Care</p>
+              <div class="pptflow-row">
+                <div class="pptflow-node"><span class="num">1</span>Patient arrives / Scheduling</div>
+                <div class="pptflow-node"><span class="num">2</span>Registration · Front Office</div>
+                <div class="pptflow-node"><span class="num">3</span>Patient meets a Nurse</div>
+                <div class="pptflow-node"><span class="num">4</span>Examination Room · Vitals</div>
+                <div class="pptflow-node"><span class="num">5</span>Consultation with Physician</div>
+              </div>
+              <div class="pptflow-arrow">▼</div>
+              <div class="pptflow-row">
+                <div class="pptflow-node accent"><span class="num">6</span>Prescription &amp; Pharmacy</div>
+                <div class="pptflow-node accent"><span class="num">7</span>External Labs &amp; Radiology</div>
+                <div class="pptflow-node accent"><span class="num">8</span>Back Office · Coding &amp; Billing</div>
+                <div class="pptflow-node accent"><span class="num">9</span>Claims Submission to Payer</div>
+                <div class="pptflow-node accent"><span class="num">10</span>Patient Billing &amp; Follow-up</div>
+              </div>
+              <div class="pptflow-legend">
+                <span><i style="background:#7133AE"></i>Clinical Area</span>
+                <span><i style="background:#38b8b3"></i>Back Office &amp; Payer</span>
+              </div>
+            </div>
+
+            <ol class="workflow-list">
+              <li><strong>Scheduling</strong> — Patient books via phone, portal, or chat; appointment slotted by visit type & duration.</li>
+              <li><strong>Insurance Verification</strong> — Coverage, copay, deductible, and pre-auth confirmed before visit.</li>
+              <li><strong>Check-in & Registration</strong> — Demographics, insurance cards, consents; kiosks and pre-visit forms increasingly digital.</li>
+              <li><strong>Rooming & Vital Signs</strong> — MA/nurse documents vitals, chief complaint, medication reconciliation.</li>
+              <li><strong>Provider Evaluation</strong> — HPI, ROS, physical exam, assessment & plan documented in EHR.</li>
+              <li><strong>Diagnostic Orders</strong> — Labs, imaging, and procedures ordered with CPOE safety checks.</li>
+              <li><strong>Treatment Planning</strong> — e-Prescriptions, patient education, referrals routed electronically.</li>
+              <li><strong>Checkout</strong> — Follow-up scheduled, copay collected, after-visit summary printed.</li>
+              <li><strong>Coding & Billing</strong> — Coder assigns CPT/ICD-10/HCC; claim submitted via clearinghouse.</li>
+              <li><strong>Results & Follow-up</strong> — Result review, abnormal escalation, patient communicated via portal/phone.</li>
+            </ol>
+
+            <h3 class="subsection-header">💵 Billing, Coding & Claims Essentials</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🏷️ Code Sets</h3>
+                <ul>
+                  <li><strong>CPT</strong> — procedures & services (AMA)</li>
+                  <li><strong>ICD-10-CM</strong> — diagnoses (~70K codes)</li>
+                  <li><strong>HCPCS Level II</strong> — supplies, drugs, DME</li>
+                  <li><strong>HCC</strong> — risk adjustment for VBC contracts</li>
+                  <li><strong>DRG</strong> — inpatient grouping for payment</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>📤 Claim Lifecycle</h3>
+                <ul>
+                  <li>Charge capture in EHR/PM</li>
+                  <li>837P / 837I claim formats (X12)</li>
+                  <li>Clearinghouse scrubbing & submission</li>
+                  <li>Payer adjudication (15–45 days)</li>
+                  <li>ERA/EOB posting; patient responsibility billed</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>⚠️ Denial Management</h3>
+                <ul>
+                  <li>Industry denial rate: 5–15% of claims</li>
+                  <li>Top reasons: eligibility, auth, coding, medical necessity</li>
+                  <li>Appeals: first-level → external review</li>
+                  <li>Revenue cycle 60–90 days end-to-end</li>
+                  <li>AI now scrubbing & predicting denials</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Acute -->
+        <section id="acute" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🚨 Acute Care & Hospital Services</h2>
+            <p class="lead">Hospitals are the most complex provider organizations — capital-intensive, regulated, and the safety net for the sickest patients. Roughly 33% of US healthcare spend flows through them.</p>
+
+            <div class="hero-image-row">
+              <div>
+                <img src="images/hospital-building.png" alt="Hospital building" />
+              </div>
+              <div>
+                <p style="margin:0 0 12px; color: var(--text-muted); line-height: 1.7;">Acute care covers <strong>short-term, severe</strong> conditions requiring immediate attention — from emergencies and surgeries to ICU-level monitoring. US hospitals deliver the most advanced acute interventions in the world, anchored by emergency departments, operating rooms, and specialty units.</p>
+                <p style="margin:0; color: var(--text-muted); line-height: 1.7;">Two basic hospital types coexist: <strong>Proprietary (for-profit)</strong> and <strong>Non-profit / charity / government-supported</strong>, each with distinct missions, payer mixes, and operating models.</p>
+              </div>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat-tile"><span class="stat-value">6,120</span><span class="stat-label">Total Hospitals</span></div>
+              <div class="stat-tile"><span class="stat-value">919K</span><span class="stat-label">Staffed Beds</span></div>
+              <div class="stat-tile"><span class="stat-value">34M</span><span class="stat-label">Annual Admissions</span></div>
+              <div class="stat-tile"><span class="stat-value">139M</span><span class="stat-label">ED Visits / yr</span></div>
+            </div>
+
+            <h3 class="subsection-header">🏥 Hospital Types & Ownership</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Share</th>
+                    <th>Mission</th>
+                    <th>Examples</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Non-profit Community</td><td>~58%</td><td>Community benefit, tax-exempt</td><td>Ascension, Mayo, Cleveland Clinic</td></tr>
+                  <tr><td>For-profit</td><td>~21%</td><td>Shareholder-driven efficiency</td><td>HCA, Tenet, Community Health Systems</td></tr>
+                  <tr><td>Government (non-federal)</td><td>~16%</td><td>State / county safety net</td><td>NYC H+H, LA County, public university hospitals</td></tr>
+                  <tr><td>Federal</td><td>~3%</td><td>Veterans, military, IHS</td><td>VA, DoD, Indian Health Service</td></tr>
+                  <tr><td>Critical Access</td><td>~1,360 hospitals</td><td>Rural, &lt;25 beds, 96-hr LOS limit</td><td>Designated by CMS</td></tr>
+                  <tr><td>Academic / Teaching</td><td>~400 major</td><td>Train residents, fellows; research</td><td>Johns Hopkins, Mass General, UCSF</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 class="subsection-header">🚨 Emergency Department Operations</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🩻 Triage & Acuity</h3>
+                <p>EDs run 24/7 with rapid triage using the <strong>Emergency Severity Index (ESI 1–5)</strong>. Higher-volume EDs see 80K–100K+ visits per year.</p>
+                <ul>
+                  <li>ESI 1: Resuscitation (cardiac arrest, severe trauma)</li>
+                  <li>ESI 2: Emergent (stroke, severe pain, sepsis)</li>
+                  <li>ESI 3: Urgent (abdominal pain, asthma)</li>
+                  <li>ESI 4–5: Less urgent / non-urgent</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>⏱️ Throughput Realities</h3>
+                <ul>
+                  <li>Median ED LOS: 165 min discharged, 280 min admitted</li>
+                  <li>Boarding & crowding remain top safety issues</li>
+                  <li>~16% of ED visits result in admission</li>
+                  <li>EMTALA mandates screening regardless of ability to pay</li>
+                  <li>Telestroke & teleneuro standard in rural EDs</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🏨 Hospital Workflow & Admission Lifecycle</h3>
+
+            <div class="pptflow">
+              <p class="pptflow-title">Hospital Workflow — Patient Journey</p>
+              <div class="pptflow-row">
+                <div class="pptflow-node muted"><span class="num">1</span>Referral / Scheduling</div>
+                <div class="pptflow-node muted"><span class="num">2</span>Patient Arrives</div>
+                <div class="pptflow-node muted"><span class="num">3</span>Front Office Registration</div>
+                <div class="pptflow-node muted"><span class="num">4</span>Authorization &amp; Insurance</div>
+                <div class="pptflow-node muted"><span class="num">5</span>Admission · Bed Assignment</div>
+              </div>
+              <div class="pptflow-arrow">▼</div>
+              <div class="pptflow-row">
+                <div class="pptflow-node"><span class="num">6</span>Inpatient Treatment · Beds, OR, ICU</div>
+                <div class="pptflow-node"><span class="num">7</span>Radiology &amp; Labs · Diagnostics</div>
+                <div class="pptflow-node"><span class="num">8</span>Coded Charts &amp; Chart Management</div>
+                <div class="pptflow-node"><span class="num">9</span>Billing &amp; Accounts Receivable</div>
+                <div class="pptflow-node"><span class="num">10</span>Claim Submission · Payer · Discharge</div>
+              </div>
+              <div class="pptflow-legend">
+                <span><i style="background:#ffffff; border:2px solid #7133AE"></i>Front Office &amp; Authorization</span>
+                <span><i style="background:#7133AE"></i>Clinical &amp; Back Office</span>
+              </div>
+            </div>
+
+            <ol class="workflow-list">
+              <li><strong>Pre-admission</strong> — Scheduling, insurance authorization, H&P; or unplanned ED admit.</li>
+              <li><strong>Bed Assignment</strong> — Patient placed by acuity and service line.</li>
+              <li><strong>Admit Orders</strong> — Hospitalist or service team writes admit orders, meds reconciled.</li>
+              <li><strong>Daily Rounds</strong> — Multidisciplinary plan-of-the-day, diagnostic updates, discharge target.</li>
+              <li><strong>Consults & Diagnostics</strong> — Specialists evaluate; imaging, labs, procedures performed.</li>
+              <li><strong>Discharge Planning</strong> — Starts day one — home, SNF, rehab, hospice destinations.</li>
+              <li><strong>Discharge</strong> — Med rec, discharge summary, follow-up appointment.</li>
+              <li><strong>Post-discharge Follow-up</strong> — Calls within 48–72 hrs; reduce 30-day readmits.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- Specialty hospital -->
+        <section id="specialty" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">⚙️ Specialty Hospital Services</h2>
+            <p class="lead">Hospitals run dozens of clinical service lines, each with distinct staffing models, technology, and reimbursement. The most resource-intensive — ICU, OR, NICU, and L&D — drive a large share of cost and outcomes.</p>
+
+            <h3 class="subsection-header">🧬 Ancillary Services Categories</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🔬 Diagnostic</h3>
+                <p>Provided in-office or supporting physician services at a hospital, ASC, or freestanding diagnostic facility.</p>
+                <ul>
+                  <li>Audiology</li>
+                  <li>Radiology (X-ray, CT, MRI, ultrasound)</li>
+                  <li>Pulmonary function testing</li>
+                  <li>Clinical laboratory</li>
+                  <li>EKG / cardiac diagnostics</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>💪 Therapeutic</h3>
+                <p>Restorative and corrective services in free-standing medical facilities or hospital-based clinics.</p>
+                <ul>
+                  <li>Physical therapy</li>
+                  <li>Occupational therapy</li>
+                  <li>Speech therapy</li>
+                  <li>Radiation therapy</li>
+                  <li>Nutrition &amp; weight management</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🛏️ Custodial</h3>
+                <p>Ongoing assistance with activities of daily living — bridging into post-acute and long-term settings.</p>
+                <ul>
+                  <li>Hospice care</li>
+                  <li>Home health</li>
+                  <li>Nursing home / SNF care</li>
+                  <li>Assisted living support</li>
+                  <li>Personal care aides</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🫀 Intensive Care Units (ICU)</h3>
+                <p>1:1 to 1:2 nurse ratios, continuous monitoring, ventilators, ECMO, CRRT. The most expensive bed in the hospital.</p>
+                <ul>
+                  <li>Daily cost: $3,000–$10,000+</li>
+                  <li>Sub-types: MICU, SICU, CTICU, NICU, PICU, Neuro</li>
+                  <li>Intensivist-led & tele-ICU coverage</li>
+                  <li>Sepsis mortality: 20–40%</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🔪 Operating Rooms & Perioperative</h3>
+                <p>Highly orchestrated environments — surgeons, anesthesia, scrubs, circulators. Major margin contributor for hospitals.</p>
+                <ul>
+                  <li>Surgical specialties: General, CT, Neuro, Ortho, Vascular, Plastics</li>
+                  <li>Anesthesia: general, regional, MAC, local</li>
+                  <li>PACU: post-op recovery 30 min–2 hr</li>
+                  <li>SSI prevention bundles standardized</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>👶 NICU</h3>
+                <p>Levels I–IV based on capability. Level IV care manages &lt;28-week neonates with surgical needs. Outcomes have improved dramatically — 22-week gestations now occasionally survive.</p>
+                <ul>
+                  <li>Common dx: prematurity, RDS, sepsis, jaundice</li>
+                  <li>Equipment: vents, CPAP, phototherapy</li>
+                  <li>Family-centered & kangaroo care standard</li>
+                  <li>LOS: weeks to months</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🤱 Obstetrics & Maternity</h3>
+                <p>~3.6M US births/year. Vaginal vs C-section: ~32% cesarean rate. US maternal mortality remains highest among developed nations — a quality crisis driving major policy attention.</p>
+                <ul>
+                  <li>Prenatal → L&D → postpartum continuum</li>
+                  <li>Risks: preeclampsia, GDM, hemorrhage</li>
+                  <li>Newborn screening: PKU, hearing, CCHD</li>
+                  <li>Doula & midwifery models expanding</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🩻 Imaging & Radiology</h3>
+                <p>X-ray, US, CT, MRI, nuclear, PET, interventional. Radiologists increasingly read off-site (teleradiology) with AI triage support.</p>
+                <ul>
+                  <li>X-ray $50–$200; CT $500–$1,500; MRI $1,000–$3,000</li>
+                  <li>Stat &lt;1 hr to routine 24 hr TAT</li>
+                  <li>IR procedures: biopsies, drains, embolization</li>
+                  <li>AI triage for stroke, PE, ICH</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🧪 Clinical Laboratory</h3>
+                <p>Chemistry, hematology, microbiology, blood bank, molecular. Automation lines process thousands of samples/hour.</p>
+                <ul>
+                  <li>Point-of-care: glucose, troponin, INR, COVID</li>
+                  <li>Stat vs routine TAT critical to throughput</li>
+                  <li>Molecular dx growing — PCR, NGS, ctDNA</li>
+                  <li>CLIA & CAP regulate quality</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Long-Term Care -->
+        <section id="longterm" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🏘️ Long-Term & Post-Acute Care</h2>
+            <p class="lead">Long-term care serves the <strong>12M+</strong> Americans needing assistance with daily activities. The continuum spans home care, assisted living, SNFs, memory care, and hospice — each with distinct payers and regulations.</p>
+
+            <h3 class="subsection-header">👥 Who Needs Long-Term Care?</h3>
+            <div class="icon-row">
+              <div class="icon-card">
+                <img src="images/nurse-icon.png" alt="Elderly individuals" />
+                <h4>Elderly &amp; Frail</h4>
+                <p>Older adults with declining physical or cognitive abilities who need assistance with ADLs.</p>
+              </div>
+              <div class="icon-card">
+                <img src="images/doctor-ekg.png" alt="Chronic illness" />
+                <h4>Chronic Illness &amp; Disability</h4>
+                <p>People with Parkinson's, stroke survivors, COPD, CHF, and other long-term conditions.</p>
+              </div>
+              <div class="icon-card">
+                <img src="images/hospital-cartoon.png" alt="Post-acute recovery" />
+                <h4>Post-Acute Recovery</h4>
+                <p>Patients recovering from surgery, hospitalization, or severe illness needing skilled rehab.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🛌 Skilled Nursing Facilities (SNFs)</h3>
+                <p>24-hour nursing care with rehab — the primary post-acute setting after hospitalization. Medicare covers up to 100 days, but only after a qualifying 3-day inpatient stay.</p>
+                <ul>
+                  <li>~15,000 SNFs nationwide</li>
+                  <li>Average LOS: 20–35 days (post-acute) or long-stay custodial</li>
+                  <li>PDPM payment model since 2019</li>
+                  <li>5-Star Quality Rating drives consumer choice</li>
+                  <li>Staffing minimums tightening under CMS rule</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🏡 Assisted Living Facilities</h3>
+                <p>Residential settings for seniors needing help with ADLs but not skilled nursing. Largely private pay; Medicare does not cover room & board.</p>
+                <ul>
+                  <li>~31,000 communities; ~1M residents</li>
+                  <li>Monthly cost: $4,500–$6,500</li>
+                  <li>State-regulated (not federal)</li>
+                  <li>Aging-in-place model with care levels</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🧠 Memory Care Units</h3>
+                <p>Secure environments for Alzheimer's & dementia residents. Specialized programming, fall prevention, and dementia-trained staff.</p>
+                <ul>
+                  <li>~7M Americans with Alzheimer's (2024)</li>
+                  <li>Monthly cost: $5,500–$8,500+</li>
+                  <li>Secured units to prevent elopement</li>
+                  <li>LOS: 2–5 years as disease progresses</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🕊️ Hospice & Palliative Care</h3>
+                <p>Hospice serves terminal patients with &lt;6 months prognosis; palliative supports anyone with serious illness — often alongside curative care.</p>
+                <ul>
+                  <li>~1.7M Medicare beneficiaries use hospice annually</li>
+                  <li>80% of hospice care is home-based</li>
+                  <li>Interdisciplinary team: MD, RN, SW, chaplain, aide</li>
+                  <li>Medicare hospice benefit fully covers care</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🏠 Home Health & Home-Based Care</h3>
+                <p>Skilled nursing, PT/OT/ST, social work, and aides delivered in the home. Growing fastest of any care setting under value-based contracts.</p>
+                <ul>
+                  <li>~12,000 Medicare-certified home health agencies</li>
+                  <li>Episodes paid via PDGM since 2020</li>
+                  <li>Hospital-at-home programs expanded under CMS waiver</li>
+                  <li>RPM + telehealth tightly integrated</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🦽 Rehab Hospitals (IRFs & LTCHs)</h3>
+                <p>Inpatient Rehab Facilities (IRFs) provide intensive 3+ hr/day therapy; Long-Term Care Hospitals (LTCHs) serve medically complex patients needing &gt;25 days.</p>
+                <ul>
+                  <li>~1,180 IRFs and ~360 LTCHs</li>
+                  <li>Common dx: stroke, hip fx, SCI, TBI</li>
+                  <li>IRF-PAI quality measures reported to CMS</li>
+                  <li>Site-neutral payment policies pressuring LTCHs</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chronic -->
+        <section id="chronic" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🩸 Chronic Disease Management</h2>
+            <p class="lead">Chronic conditions drive <strong>~75% of US healthcare spending and 90% of clinic visits</strong>. Provider markets are racing to coordinate care, deploy RPM, and align incentives via value-based contracts.</p>
+
+            <div class="stat-grid">
+              <div class="stat-tile"><span class="stat-value">37M</span><span class="stat-label">Diabetes</span></div>
+              <div class="stat-tile"><span class="stat-value">120M+</span><span class="stat-label">Hypertension</span></div>
+              <div class="stat-tile"><span class="stat-value">16M</span><span class="stat-label">COPD</span></div>
+              <div class="stat-tile"><span class="stat-value">38M</span><span class="stat-label">CKD</span></div>
+            </div>
+
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>📊 Burden & Drivers</h3>
+                <ul>
+                  <li>6 in 10 US adults have 1+ chronic condition</li>
+                  <li>4 in 10 have 2+ (multi-morbidity)</li>
+                  <li>Top drivers: tobacco, diet, inactivity, alcohol</li>
+                  <li>Health inequities concentrated by ZIP code</li>
+                  <li>Behavioral health comorbidity drives total cost</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>🧭 Management Strategies</h3>
+                <ul>
+                  <li>Care management + RN navigators</li>
+                  <li>Population health analytics & risk stratification</li>
+                  <li>Disease registries (DM, HTN, CHF, COPD)</li>
+                  <li>Patient self-management programs</li>
+                  <li>Pharmacist-led MTM for poly-pharmacy</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>💰 Value-Based Care Models</h3>
+                <ul>
+                  <li>ACOs (MSSP & REACH)</li>
+                  <li>Bundled Payments (BPCI-A)</li>
+                  <li>Medicare Advantage capitation</li>
+                  <li>Primary care capitation (e.g., CPC+, PCF)</li>
+                  <li>Direct Contracting / risk-bearing primary care</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3>📡 Remote Patient Monitoring</h3>
+                <ul>
+                  <li>BP cuffs, glucometers, scales, pulse-ox</li>
+                  <li>CPT 99453/99454/99457/99458 reimbursement</li>
+                  <li>Reduces 30-day readmits 30–50% in CHF</li>
+                  <li>AI-driven alerts to care teams</li>
+                  <li>Continuous Glucose Monitors becoming mainstream</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Workflows -->
+        <section id="workflows" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">⚙️ Healthcare Workflows & Processes</h2>
+            <p class="lead">Provider operations are a web of interlocking workflows. Mapping these clearly is essential before automating, digitizing, or building products into the clinical environment.</p>
+
+            <h3 class="subsection-header">💊 Prescription & Medication Workflow</h3>
+
+            <div class="hero-image-row">
+              <div>
+                <img src="images/pharmacy-isometric.png" alt="Pharmacy workflow" />
+              </div>
+              <div>
+                <p style="margin:0 0 12px; color: var(--text-muted); line-height: 1.7;">Modern e-Prescribing connects the physician's EHR to the pharmacy and PBM (Pharmacy Benefit Manager) in real time. Eligibility, formulary, drug history, and copay checks happen before the patient leaves the visit.</p>
+                <p style="margin:0; color: var(--text-muted); line-height: 1.7;">PBMs sit between payers and pharmacies — they adjudicate claims, manage formularies, and negotiate manufacturer rebates. They're a major (and often opaque) lever on drug spending.</p>
+              </div>
+            </div>
+
+            <div class="pptflow">
+              <p class="pptflow-title">Prescription Workflow</p>
+              <div class="pptflow-row">
+                <div class="pptflow-node"><span class="num">1</span>Patient Enrollment · Rx Card</div>
+                <div class="pptflow-node"><span class="num">2</span>Patient Visits Physician</div>
+                <div class="pptflow-node"><span class="num">3</span>e-Prescription / Fax to Pharmacy</div>
+                <div class="pptflow-node"><span class="num">4</span>Check Eligibility &amp; Formulary</div>
+                <div class="pptflow-node"><span class="num">5</span>Drug History &amp; Interaction Check</div>
+              </div>
+              <div class="pptflow-arrow">▼</div>
+              <div class="pptflow-row">
+                <div class="pptflow-node accent"><span class="num">6</span>Pharmacy Dispenses Medicines</div>
+                <div class="pptflow-node accent"><span class="num">7</span>Patient Copay Collected</div>
+                <div class="pptflow-node accent"><span class="num">8</span>Pharmacy Claim to PBM / Processor</div>
+                <div class="pptflow-node accent"><span class="num">9</span>Adjudication &amp; Payment</div>
+                <div class="pptflow-node accent"><span class="num">10</span>Refills · Adherence Monitoring</div>
+              </div>
+              <div class="pptflow-legend">
+                <span><i style="background:#7133AE"></i>Patient / Physician / Pharmacy</span>
+                <span><i style="background:#38b8b3"></i>Payment &amp; PBM</span>
+              </div>
+            </div>
+
+            <ol class="workflow-list">
+              <li><strong>Diagnosis & Decision</strong> — Provider selects drug based on guideline, allergy, and formulary.</li>
+              <li><strong>e-Prescribing</strong> — Electronic transmission via Surescripts; controlled substances via EPCS.</li>
+              <li><strong>Interaction & Allergy Checks</strong> — Built into EHR / pharmacy software.</li>
+              <li><strong>Formulary & Prior Auth</strong> — Real-time benefit check; PA request initiated if needed.</li>
+              <li><strong>Pharmacy Review</strong> — Pharmacist verifies appropriateness and counsels patient.</li>
+              <li><strong>Dispensing & Adherence</strong> — Fill, sync, and refill workflows; med sync programs.</li>
+              <li><strong>Monitoring</strong> — INR, levels, side effects, adherence — closes the loop with provider.</li>
+            </ol>
+
+            <h3 class="subsection-header">💵 Revenue Cycle Workflow</h3>
+            <ol class="workflow-list">
+              <li><strong>Pre-registration</strong> — Patient identity, insurance, demographics captured.</li>
+              <li><strong>Eligibility & Authorization</strong> — Coverage verified; pre-auth for elective procedures.</li>
+              <li><strong>Charge Capture</strong> — Services documented and coded in EHR.</li>
+              <li><strong>Coding & Claim Edit</strong> — CPT/ICD-10/HCPCS assigned; claim scrubbed.</li>
+              <li><strong>Claim Submission</strong> — Electronic via clearinghouse to payer.</li>
+              <li><strong>Payer Adjudication</strong> — Acceptance, denial, or partial pay decision returned.</li>
+              <li><strong>Payment Posting & A/R</strong> — ERA posted; underpayments worked; appeals filed.</li>
+              <li><strong>Patient Billing</strong> — Statements sent; payment plans, financial assistance offered.</li>
+            </ol>
+
+            <h3 class="subsection-header">🔄 Care Transition Workflow</h3>
+            <div class="callout">
+              <strong>Why it matters:</strong> Poor transitions between settings (hospital → home, hospital → SNF, SNF → home) drive ~20% of Medicare 30-day readmissions. Every hand-off is a safety event.
+            </div>
+            <ol class="workflow-list">
+              <li><strong>Discharge Planning</strong> — Begins day of admission; SW, case mgmt, family.</li>
+              <li><strong>Med Reconciliation</strong> — Pre-admit vs in-hospital vs discharge meds aligned.</li>
+              <li><strong>Patient & Family Education</strong> — Teach-back method, written instructions.</li>
+              <li><strong>Post-discharge Communication</strong> — Summary to PCP within 48 hr.</li>
+              <li><strong>Follow-up Visit</strong> — Within 7–14 days for high-risk patients.</li>
+              <li><strong>Transitional Care Mgmt</strong> — CPT 99495/99496 reimburse for follow-up bundle.</li>
+            </ol>
+          </div>
+        </section>
+
+        <footer class="footer">
+          Healthcare COE · Provider Markets Reference · Updated 2026
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function startJourney() {
+      const landing = document.getElementById('landing-page');
+      const app = document.getElementById('app-layout');
+      landing.style.opacity = '0';
+      landing.style.visibility = 'hidden';
+      app.classList.add('active');
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-btn');
+      const current = body.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', next);
+      themeBtn.innerHTML = next === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      try { localStorage.setItem('pm-theme', next); } catch (e) {}
+    }
+
+    (function () {
+      try {
+        const saved = localStorage.getItem('pm-theme');
+        if (saved) {
+          document.body.setAttribute('data-theme', saved);
+          const btn = document.getElementById('theme-btn');
+          if (btn) btn.innerHTML = saved === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+      } catch (e) {}
+    })();
+
+    // Active nav highlight on scroll
+    const navLinks = document.querySelectorAll('#nav-links a');
+    const sections = document.querySelectorAll('main.main-content section.section');
+
+    function updateActiveNav() {
+      let currentId = '';
+      const scrollPos = window.scrollY + 120;
+      sections.forEach(sec => {
+        if (sec.offsetTop <= scrollPos) currentId = sec.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+      });
+    }
+    window.addEventListener('scroll', updateActiveNav);
+
+    // Smooth scroll for sidebar nav
+    navLinks.forEach(a => {
+      a.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (!targetId || targetId.charAt(0) !== '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
