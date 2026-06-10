@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HL7 FHIR Basics – A Foundation for Interoperability</title>
+  <link rel="icon" type="image/png" href="https://www.mindbowser.com/wp-content/uploads/2025/10/512x512-1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Brand Colors */
+      --brand-primary: #7133AE;
+      --brand-secondary: #5d2a90;
+      --brand-accent: #38b8b3;
+      --brand-light: rgba(113, 51, 174, 0.18);
+
+      /* Dark Theme (Default) */
+      --bg-landing: #1a1e2e;
+      --bg-1: #0b0713;
+      --bg-2: #150f22;
+      --text-main: rgba(255, 255, 255, 0.9);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --sidebar-bg: rgba(15, 10, 25, 0.98);
+      --header-bg: rgba(15, 10, 25, 0.98);
+      --table-header: rgba(113, 51, 174, 0.2);
+      --logo-filter: none;
+      --theme-btn-bg: rgba(255, 255, 255, 0.1);
+      --theme-btn-hover: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="light"] {
+      /* Light Theme */
+      --bg-landing: #e2e8f0;
+      --bg-1: #ffffff;
+      --bg-2: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --sidebar-bg: #f8fafc;
+      --header-bg: #ffffff;
+      --table-header: rgba(113, 51, 174, 0.15);
+      --logo-filter: invert(1) hue-rotate(180deg);
+      --theme-btn-bg: rgba(0, 0, 0, 0.05);
+      --theme-btn-hover: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-1);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* --- Landing Page --- */
+    #landing-page {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-landing);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .landing-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+    }
+
+    .landing-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .landing-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: #fff;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(113, 51, 174, 0.4);
+    }
+
+    .landing-features {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 64px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .landing-features span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* --- App Layout --- */
+    #app-layout {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    #app-layout.active {
+      display: flex;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .header .logo {
+      height: 24px;
+      filter: var(--logo-filter);
+      transition: filter 0.3s ease;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: var(--theme-btn-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--theme-btn-hover);
+    }
+
+    .layout-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      position: fixed;
+      top: 60px; bottom: 0; left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .sidebar h4 {
+      color: var(--brand-primary);
+      margin: 0 0 16px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { margin-bottom: 4px; }
+    .sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+    [data-theme="dark"] .sidebar a:hover, [data-theme="dark"] .sidebar a.active {
+      color: #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Alternating Sections */
+    .section {
+      padding: 64px 80px;
+      scroll-margin-top: 60px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section.bg-1 { background-color: var(--bg-1); }
+    .section.bg-2 { background-color: var(--bg-2); }
+
+    .section-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Section Headers */
+    .section-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .subsection-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 32px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Prominent Dark Content Boxes (Black section for visibility) */
+    .content-box {
+      background: #140d21;
+      color: #f1f5f9;
+      border: 1px solid rgba(113, 51, 174, 0.4);
+      border-left: 4px solid var(--brand-accent);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .content-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(113, 51, 174, 0.2);
+    }
+
+    .content-box h3 { color: #ffffff; }
+    .content-box p { line-height: 1.7; margin-bottom: 16px; color: #e2e8f0; }
+    .content-box ul { padding-left: 20px; line-height: 1.7; color: #e2e8f0; }
+    .content-box li { margin-bottom: 10px; }
+
+    /* Grids (Enforcing exactly 3 or 2 per row) */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
+
+    /* Images */
+    .feature-image {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Data Tables */
+    .data-table-wrapper {
+      background: var(--bg-1);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); line-height: 1.6; }
+    th {
+      background: var(--table-header);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+    tr:last-child td { border-bottom: none; }
+
+    .interactive-list li {
+      padding: 16px;
+      background: #1a1429;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    .interactive-list li:hover {
+      border-left: 4px solid var(--brand-primary);
+      transform: translateX(4px);
+    }
+
+    /* Flow / Timeline Diagrams */
+    .flow-container {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 32px;
+      background: var(--bg-1);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .flow-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 160px;
+    }
+    .flow-node {
+      background: rgba(113, 51, 174, 0.1);
+      border: 1px solid rgba(113, 51, 174, 0.3);
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+    }
+    .flow-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(113, 51, 174, 0.2);
+      background: rgba(113, 51, 174, 0.2);
+    }
+    .flow-node.highlight {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: white;
+      border: none;
+      font-size: 15px;
+      padding: 20px 16px;
+      box-shadow: 0 4px 12px rgba(113, 51, 174, 0.4);
+    }
+    .flow-arrow {
+      color: var(--brand-accent);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      animation: pulseArrow 2s infinite;
+    }
+    @keyframes pulseArrow {
+      0% { transform: translateX(0); opacity: 0.5; }
+      50% { transform: translateX(5px); opacity: 1; }
+      100% { transform: translateX(0); opacity: 0.5; }
+    }
+    .flow-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    [data-theme="light"] .flow-node { background: rgba(113, 51, 174, 0.05); border-color: rgba(113, 51, 174, 0.2); }
+    [data-theme="light"] .flow-node:hover { background: rgba(113, 51, 174, 0.1); }
+
+    /* Code / Message Blocks */
+    .code-block {
+      background: #0d0717;
+      border: 1px solid rgba(113, 51, 174, 0.3);
+      border-radius: 8px;
+      padding: 18px 22px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+      white-space: pre;
+    }
+    .code-block .ck { color: #38b8b3; }
+    .code-block .cs { color: #fbbf24; }
+    .code-block .cn { color: #f472b6; }
+    [data-theme="light"] .code-block { background: #0f172a; color: #e2e8f0; }
+
+    /* Stacked Resource Anatomy Diagram */
+    .resource-stack {
+      max-width: 320px;
+      margin: 0 auto 24px;
+      border: 2px solid #d4a04c;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #d4a04c;
+    }
+    .resource-stack .res-title {
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: #1f2937;
+      padding: 10px;
+    }
+    .resource-stack .res-row {
+      background: #f8fafc;
+      color: #1f2937;
+      text-align: center;
+      font-weight: 600;
+      padding: 16px;
+      margin: 0 6px 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+    }
+    .resource-stack .res-row:last-child { margin-bottom: 6px; }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border-color);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .section { padding: 48px; }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .section { padding: 32px 24px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <div class="landing-content">
+      <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser Logo" style="height: 36px; margin-bottom: 32px; filter: grayscale(100%) brightness(1000%); transition: filter 0.3s ease;">
+      <h1 class="landing-title">HL7 FHIR Basics</h1>
+      <p class="landing-subtitle">A Foundation for Interoperability — explore the journey from paper records to modern healthcare data exchange, HL7 v2/v3, and the FHIR standard, in an interactive documentation format.</p>
+
+      <button class="btn-start" onclick="startJourney()">
+        <span>🧬</span> Explore Documentation &rarr;
+      </button>
+
+      <div class="landing-features">
+        <span>📄 Full PPT Coverage</span>
+        <span>🔗 HL7 &amp; FHIR Standards</span>
+        <span>🔄 Interactive Layout</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div id="app-layout">
+    <header class="header">
+      <a href="#">
+        <img src="https://mindbowsernew.wpenginepowered.com/wp-content/uploads/2025/10/header-1.svg" alt="Mindbowser" class="logo" />
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        ☀️ Light Mode
+      </button>
+    </header>
+
+    <div class="layout-wrapper">
+      <aside class="sidebar">
+        <h4>Contents</h4>
+        <ul id="nav-links">
+          <li><a href="#intro" class="active">Training Program</a></li>
+          <li><a href="#agenda">HL7 FHIR Basics &amp; Agenda</a></li>
+          <li><a href="#paper-era">Paper-Based Records Era</a></li>
+          <li><a href="#early-systems">Early Digital Systems</a></li>
+          <li><a href="#data-exchange">Need for Data Exchange</a></li>
+          <li><a href="#use-case">Healthcare Use Case</a></li>
+          <li><a href="#standards">What is a Standard?</a></li>
+          <li><a href="#interoperability">Interoperability</a></li>
+          <li><a href="#evolution">Evolution of Standards</a></li>
+          <li><a href="#hl7-v2-v3">HL7 V2 &amp; V3</a></li>
+          <li><a href="#fhir-beginning">HL7 FHIR: The Beginning</a></li>
+          <li><a href="#fhir-five-things">FHIR: Five Things &amp; Manifesto</a></li>
+          <li><a href="#resources">FHIR Resources</a></li>
+          <li><a href="#data-types">Data Types &amp; Encodings</a></li>
+          <li><a href="#releases">FHIR Releases</a></li>
+          <li><a href="#rest-api">REST APIs &amp; Hands-On</a></li>
+          <li><a href="#thanks">Thank You</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+
+        <!-- Training Program Section -->
+        <section id="intro" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🎓 Healthcare CoE Training Program</h2>
+
+            <div class="content-box">
+              <h3 style="margin-top:0;">📌 Our Vision</h3>
+              <p>Mindbowser Healthcare Tech Training is an initiative designed to equip developers, QA engineers, and tech professionals with essential knowledge and skills in healthcare technology. The goal is to bridge the gap between healthcare and technology by providing comprehensive training sessions that cover key aspects of the health tech ecosystem.</p>
+            </div>
+
+            <h3 class="subsection-header">🎯 Why This Training?</h3>
+            <div class="content-box">
+              <ul class="interactive-list">
+                <li>Healthcare technology is becoming increasingly complex.</li>
+                <li>Growing demand for interoperability expertise.</li>
+                <li>Critical shortage of skilled healthcare integration professionals.</li>
+                <li>Need for practical, hands-on experience with modern healthcare standards.</li>
+                <li>Rising adoption of FHIR and SMART on FHIR technologies.</li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">🏆 Training Structure — Certification Levels</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🥉 Level 1: Foundational Certification</h3>
+                <ul style="font-size:14px;">
+                  <li><strong>Basics of US Healthcare:</strong> Overview, Provider &amp; Payer Market, HIPAA Compliance.</li>
+                  <li><strong>Interoperability:</strong> Data sources, needs, levels, and benefits.</li>
+                  <li><strong>HL7 Standards:</strong> v2, v3, CDA, FHIR.</li>
+                  <li><strong>Basics of FHIR:</strong> Data model, key resources (Patient, Org, Practitioner), server setup, CRUD operations.</li>
+                  <li><strong>Basics of HL7 v2:</strong> Event triggers, segments, reading messages.</li>
+                  <li><strong>SMART Framework:</strong> Overview, use cases, launch types.</li>
+                  <li><strong>Final Assessment</strong> for certification after each section.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🥇 Level 2: Advance Certification</h3>
+                <ul style="font-size:14px;">
+                  <li><strong>Revenue Cycle Management:</strong> Workflow, clearinghouse integrations, claims workflow.</li>
+                  <li><strong>Advanced FHIR:</strong> Extensions, bundles, validation tools, subscriptions, practical use cases.</li>
+                  <li><strong>Advanced HL7 v2:</strong> Parsers, simulators, TCP/HTTP, integration types (VPN + MLLP, TLS, SFTP), security.</li>
+                  <li><strong>SMART Framework Deep Dive:</strong> OAuth 2.0, OpenID Connect, demos with EHRs.</li>
+                  <li><strong>Solution Accelerator Project:</strong> Hands-on demo with various EHRs.</li>
+                  <li><strong>Final Assessment</strong> for certification after each section.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="content-box" style="text-align: center; margin-top: 32px;">
+              <h3 style="margin-top:0;">🤝 Volunteer to Host a Session</h3>
+              <p style="margin-bottom:0;">Become part of the Healthcare Center of Excellence (CoE) — share your expertise and help grow the next generation of healthcare integration professionals.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Agenda Section -->
+        <section id="agenda" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📋 HL7 FHIR Basics &amp; Agenda</h2>
+
+            <div class="content-box" style="text-align:center;">
+              <h3 style="margin-top:0; font-size: 24px;">HL7 FHIR Basics – A Foundation for Interoperability</h3>
+              <p style="margin-bottom:0;">A deep dive into the history, purpose, and architecture of HL7 standards — culminating in a practical introduction to FHIR (Fast Healthcare Interoperability Resources).</p>
+              <p style="margin-bottom:0; margin-top: 12px; color: var(--brand-accent); font-weight: 600;">By Arun Badole</p>
+            </div>
+
+            <h3 class="subsection-header">🗂️ Session Agenda</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <ul style="padding-left:18px; font-size:14px;">
+                  <li>History &amp; Purpose</li>
+                  <li>HL7 v2 vs v3 Payload</li>
+                  <li>Interoperability</li>
+                  <li>FHIR</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <ul style="padding-left:18px; font-size:14px;">
+                  <li>HL7 FHIR Products Breakdown</li>
+                  <li>What is FHIR: Definition</li>
+                  <li>Five FHIR Things</li>
+                  <li>The FHIR Manifesto</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <ul style="padding-left:18px; font-size:14px;">
+                  <li>FHIR Data Model</li>
+                  <li>Data Types</li>
+                  <li>Demo Exercise</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Paper-Based Records Era Section -->
+        <section id="paper-era" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">📄 The Paper-Based Medical Records Era</h2>
+
+            <p style="margin-bottom: 24px;">Before digital systems, healthcare organizations relied entirely on paper records — creating significant challenges in access, safety, and efficiency.</p>
+
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔍 Challenges in Access, Sharing &amp; Analysis</h3>
+                <ul style="font-size:14px;">
+                  <li>Difficult to access patient records across locations.</li>
+                  <li>Limited ability to share information among providers, leading to fragmented care.</li>
+                  <li>Inefficient analysis of historical patient data for research and treatment improvement.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">⚠️ Risk of Data Loss &amp; Security Concerns</h3>
+                <ul style="font-size:14px;">
+                  <li>Physical damage (fire, water) could destroy records.</li>
+                  <li>Unauthorized access due to lack of secure storage methods.</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📦 Physical Storage Limitations</h3>
+                <ul style="font-size:14px;">
+                  <li>Large volumes of paper requiring extensive physical space.</li>
+                  <li>Manual retrieval processes leading to operational inefficiencies.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Early Digital Systems Section -->
+        <section id="early-systems" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">💻 Early Digital Systems &amp; Standardization Attempts</h2>
+
+            <h3 class="subsection-header">🖥️ Early Digital Systems: The Technical Evolution</h3>
+            <div class="content-box">
+              <h4 style="margin-top:0; color: var(--brand-accent);">Proprietary Systems (1970s–1980s)</h4>
+              <ul>
+                <li><strong>Individual Vendor Solutions:</strong> Vendors created isolated systems for billing, lab reports, and clinical documentation.</li>
+                <li><strong>No Standardization:</strong> Each system had its unique data formats and communication protocols.</li>
+                <li><strong>Point-to-Point Interfaces:</strong> Expensive and complex custom integrations were needed for systems to communicate.</li>
+              </ul>
+              <p style="margin-bottom:0;"><strong style="color:#f43f5e;">Key Issue:</strong> Lack of interoperability, leading to silos of healthcare information.</p>
+            </div>
+
+            <h3 class="subsection-header">🔌 Early Standardization Attempts</h3>
+            <div class="content-box">
+              <ul>
+                <li><strong>Custom Interfaces:</strong> Organizations built custom code to connect disparate systems, leading to high maintenance costs.</li>
+                <li><strong>File Transfers:</strong> Sharing patient information via file transfers (e.g., CSV, HL7 v2 messages) between systems.</li>
+                <li><strong>Database Replication:</strong> Direct replication of databases — prone to synchronization issues and scalability problems.</li>
+              </ul>
+              <p style="margin-bottom:0;"><strong style="color:#f43f5e;">Challenge:</strong> These methods were fragile, costly, and lacked universal standards.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Need for Data Exchange Section -->
+        <section id="data-exchange" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🔄 Need for the Data Exchange &amp; Standards</h2>
+
+            <div class="content-box">
+              <p style="margin-bottom:0;">A common data exchange standard <strong>enables interoperability</strong> — letting independent systems built by different vendors talk to each other reliably, without custom one-off integrations.</p>
+            </div>
+
+            <h3 class="subsection-header">💳 The UPI Analogy</h3>
+            <div class="flow-container">
+              <div class="flow-col">
+                <div class="flow-node">📱 App on Android<div class="flow-sub">Any Bank</div></div>
+              </div>
+              <div class="flow-arrow">⇄</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">🇮🇳 UPI<div class="flow-sub" style="color: rgba(255,255,255,0.8);">Common Data Exchange Standard</div></div>
+              </div>
+              <div class="flow-arrow">⇄</div>
+              <div class="flow-col">
+                <div class="flow-node">📱 App on iOS<div class="flow-sub">Different Bank</div></div>
+              </div>
+            </div>
+
+            <div class="content-box" style="margin-bottom:0;">
+              <p style="margin-bottom:0;"><strong>UPI</strong> is the best real-world example of a data exchange standard — it enables different apps, banks, and vendors, on Android or iOS, to seamlessly complete transactions with each other. Healthcare standards like <strong>HL7 and FHIR</strong> aim to do the same for patient data: enabling any EHR, lab system, or pharmacy app to exchange information regardless of vendor.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Healthcare Example Use Case Section -->
+        <section id="use-case" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🏥 Healthcare Example Use Case</h2>
+
+            <p style="margin-bottom: 24px;">Consider a single patient journey — it touches multiple systems and people, each generating a different type of healthcare information that needs to be exchanged accurately and securely.</p>
+
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <img src="images/usecase-prescription.png" alt="Prescription" class="feature-image" style="height:160px;">
+                <h3 style="margin-top:0;">💊 Prescription</h3>
+                <p style="font-size:14px; margin-bottom:0;">A physician issues a prescription for the patient, generating a record that needs to reach the pharmacy electronically.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <img src="images/usecase-lab.png" alt="Referral / Discharge Summary" class="feature-image" style="height:160px;">
+                <h3 style="margin-top:0;">🔬 Referral / Discharge Summary</h3>
+                <p style="font-size:14px; margin-bottom:0;">The patient is referred to a specialist or lab, generating referral and discharge summary documents that follow them across providers.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <img src="images/usecase-hospital.png" alt="Service Request / Diagnostic Report" class="feature-image" style="height:160px;">
+                <h3 style="margin-top:0;">🏨 Service Request / Diagnostic Report</h3>
+                <p style="font-size:14px; margin-bottom:0;">The hospital processes a service request (e.g. a lab test or imaging order) and returns a diagnostic report back to the care team.</p>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🔗 One Patient, Many Systems</h3>
+            <div class="flow-container">
+              <div class="flow-col">
+                <div class="flow-node highlight">🧑‍🦱 Patient</div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node">💊 Prescription<div class="flow-sub">Physician → Pharmacy</div></div>
+                <div class="flow-node">📝 Referral / Discharge Summary<div class="flow-sub">Physician → Specialist</div></div>
+                <div class="flow-node">🧪 Service Request / Diagnostic Report<div class="flow-sub">Hospital → Care Team</div></div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">🔗 Connected Care Systems</div>
+              </div>
+            </div>
+            <div class="content-box" style="margin-bottom:0;">
+              <p style="margin-bottom:0;">Without a shared standard, each of these document types would need a custom integration between every pair of systems. <strong>HL7 and FHIR exist to make this exchange consistent, predictable, and scalable.</strong></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- What is a Standard Section -->
+        <section id="standards" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🧩 What is a Standard?</h2>
+
+            <div class="content-box">
+              <p>A <strong>standard</strong> is:</p>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">📄 A Document</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">🤝 Established by Consensus</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">✅ Approved by a Recognized Body</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">📐 A Set of Rules, Guidelines &amp; Specifications</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">🌍 Something Widely Used</div>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">✅ Standards Enable Interoperability</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🗣️</span>
+                <strong>Common Language</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🧠</span>
+                <strong>Shared Understanding</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🔌</span>
+                <strong>Compatible</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🛡️</span>
+                <strong>Reliable</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">📈</span>
+                <strong>Scalable</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center; background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); border:none;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🔗</span>
+                <strong style="color:#fff;">Enable Interoperability*</strong>
+              </div>
+            </div>
+
+            <div class="content-box" style="margin-bottom:0;">
+              <h3 style="margin-top:0;">🏛️ Standards Bodies &amp; Examples</h3>
+              <p><strong>Bodies:</strong> ISO, ANSI, HL7</p>
+              <p><strong>Standards:</strong> DICOM, SNOMED, HL7 V2, V3 &amp; FHIR</p>
+              <p style="margin-bottom:0;"><strong>Real-world Example:</strong> UPI by the National Payments Corporation of India (NPCI)</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interoperability Section -->
+        <section id="interoperability" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🌐 Interoperability</h2>
+
+            <div class="content-box">
+              <p style="margin-bottom:0; font-style: italic;">"Interoperability in healthcare is the ability of different information systems, devices, and applications to access, exchange, integrate, and cooperatively use data in a coordinated manner. This ensures that healthcare providers have timely and secure access to patient information, enabling better clinical decisions and improving patient outcomes."</p>
+            </div>
+
+            <h3 class="subsection-header">🔑 Key Aspects of Interoperability</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🧱 Foundational</h3>
+                <p style="font-size:14px; margin-bottom:0;">Basic data exchange without interpretation.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏗️ Structural</h3>
+                <p style="font-size:14px; margin-bottom:0;">Consistent data format across systems for accurate interpretation.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🧠 Semantic</h3>
+                <p style="font-size:14px; margin-bottom:0;">Shared understanding of the meaning of exchanged data.</p>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🧱 Types of Interoperability</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">⚙️ Technical Interoperability</h3>
+                <p style="font-size:14px; margin-bottom:0;"><strong>Technology Layer:</strong> Connected via internet/wires so data can be exchanged, using the same format (JSON, XML, etc.)</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🧩 Semantic Interoperability</h3>
+                <p style="font-size:14px; margin-bottom:0;"><strong>Data Layer:</strong> Data which is understandable by all the parties.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">👥 Process &amp; Clinical Interoperability</h3>
+                <p style="font-size:14px; margin-bottom:0;"><strong>Human Layer:</strong> Enables users to be able to use the data — willingness to do so.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏛️ Institutional Interoperability</h3>
+                <p style="font-size:14px; margin-bottom:0;">Culture of not sharing data, education, regulations barring data exchange, and incentives that influence adoption.</p>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🚧 Healthcare Interoperability Challenges</h3>
+            <div class="content-box">
+              <ul class="interactive-list">
+                <li>🖥️ Disparate health systems</li>
+                <li>🧠 Semantic interoperability</li>
+                <li>🔄 Exchange of patient information</li>
+                <li>🔒 Data privacy and security</li>
+                <li>📜 Compliance to healthcare standards</li>
+                <li>🧑‍⚕️ Service provider experience</li>
+                <li>🙂 Patient experience</li>
+                <li>📊 Measurement of health outcomes</li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">🎯 Purpose</h3>
+            <div class="content-box">
+              <p style="margin-bottom:0;">Health organizations typically have many different computer systems used to process different patient administration or clinical tasks, such as billing, medication management, patient tracking, and documentation. All of these systems should communicate, or "interface", with each other when they receive new information or when they wish to retrieve information.</p>
+            </div>
+
+            <h3 class="subsection-header">🌍 Levels of Healthcare Interoperability</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏢 Inter Departmental</h3>
+                <p style="font-size:14px; margin-bottom:0;">E.g. CT — exchanging information between departments within the same facility.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏥 Inter Organization</h3>
+                <p style="font-size:14px; margin-bottom:0;">E.g. Registration &amp; Clinician, Radiology — exchange between different organizations.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏘️ Community</h3>
+                <p style="font-size:14px; margin-bottom:0;">Patient data access outside the organization — referring a patient to a different clinic or organization.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🌐 Global</h3>
+                <p style="font-size:14px; margin-bottom:0;">Regional, National &amp; International exchanges — with all of these layers, standards remain essential.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Evolution of Standards Section -->
+        <section id="evolution" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">⏳ Evolution of Healthcare Standards</h2>
+
+            <p style="margin-bottom: 24px;">Healthcare data standards have evolved over six decades — from the earliest digital health systems to the modern, web-native FHIR standard.</p>
+
+            <div class="flow-container" style="flex-wrap: wrap;">
+              <div class="flow-col">
+                <div class="flow-node highlight">1960s</div>
+                <div class="flow-node">First known health IT systems deployed</div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">1989</div>
+                <div class="flow-node">HL7 v2 released for enterprise-wide interoperability</div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">2003</div>
+                <div class="flow-node">HL7 v3 created to support data workflows between providers</div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">2005</div>
+                <div class="flow-node">CDA released</div>
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-col">
+                <div class="flow-node highlight">2014</div>
+                <div class="flow-node">HL7 FHIR launched using web standards</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HL7 V2 & V3 Section -->
+        <section id="hl7-v2-v3" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">📡 HL7 V2 vs HL7 V3</h2>
+
+            <h3 class="subsection-header">📨 HL7 V2</h3>
+            <div class="content-box">
+              <ul>
+                <li>Message-based format.</li>
+                <li>Widely adopted (still in use).</li>
+                <li>Uses pipe (<code>|</code>) delimited syntax.</li>
+              </ul>
+              <p style="margin-bottom:8px; font-weight:600;">Sample ADT^A04 Message:</p>
+              <pre class="code-block"><span class="ck">MSH</span>|^~\&amp;|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|ADT^A04|1817457|D|2.5|
+<span class="ck">PID</span>|||0493575^^^2^ID 1|454721||DOE^JOHN^^^|DOE^JOHN^^^|19480203|M||B|254 MYSTREET AVE^^MYTOWN^OH^44123^USA||(216)1234567||M|NON|400003403~1129086|
+<span class="ck">NK1</span>||ROE^MARIE^^^|SPO||(216)123-4567||EC|
+<span class="ck">PV1</span>||O|168 ~219~C~PMA^^^^^^^^^^^|||277^ALLEN MYLASTNAME^BONNIE^^^^|||||||||||||2688684|||||||||||||||||||||||||||199912271408||||002376853</pre>
+            </div>
+
+            <h3 class="subsection-header">🧬 HL7 V3</h3>
+            <div class="content-box">
+              <ul>
+                <li>XML-based format.</li>
+                <li>More complex and structured.</li>
+                <li>Lower adoption rate due to complexity.</li>
+              </ul>
+              <p style="margin-bottom:8px; font-weight:600;">Sample CDA Document:</p>
+              <pre class="code-block">&lt;<span class="ck">ClinicalDocument</span> xmlns=<span class="cs">"urn:hl7-org:v3"</span>&gt;
+  &lt;<span class="ck">typeId</span> root=<span class="cs">"2.16.840.1.113883.1.3"</span> extension=<span class="cs">"POCD_HD000040"</span>/&gt;
+  &lt;<span class="ck">templateId</span> root=<span class="cs">"2.16.840.1.113883.10.20.22.1.1"</span>/&gt;
+  &lt;<span class="ck">id</span> root=<span class="cs">"2.16.840.1.113883.19.5.99999.1"</span>/&gt;
+  &lt;<span class="ck">code</span> code=<span class="cs">"34133-9"</span> displayName=<span class="cs">"Summarization of patient data"</span>/&gt;
+  &lt;<span class="ck">title</span>&gt;Clinical Document&lt;/<span class="ck">title</span>&gt;
+  &lt;<span class="ck">effectiveTime</span> value=<span class="cs">"20150519"</span>/&gt;
+  &lt;<span class="ck">confidentialityCode</span> code=<span class="cs">"N"</span> displayName=<span class="cs">"normal"</span>/&gt;
+  &lt;<span class="ck">recordTarget</span>&gt;
+    &lt;<span class="ck">patientRole</span>&gt;
+      &lt;<span class="ck">id</span> root=<span class="cs">"2.16.840.1.113883.19.5"</span> extension=<span class="cs">"12345"</span>/&gt;
+      &lt;<span class="ck">patient</span>&gt;
+        &lt;<span class="ck">name</span>&gt;
+          &lt;<span class="ck">given</span>&gt;John&lt;/<span class="ck">given</span>&gt;
+          &lt;<span class="ck">family</span>&gt;Doe&lt;/<span class="ck">family</span>&gt;
+        &lt;/<span class="ck">name</span>&gt;
+        &lt;<span class="ck">administrativeGenderCode</span> code=<span class="cs">"M"</span>/&gt;
+        &lt;<span class="ck">birthTime</span> value=<span class="cs">"19480203"</span>/&gt;
+      &lt;/<span class="ck">patient</span>&gt;
+    &lt;/<span class="ck">patientRole</span>&gt;
+  &lt;/<span class="ck">recordTarget</span>&gt;
+&lt;/<span class="ck">ClinicalDocument</span>&gt;</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- HL7 FHIR: The Beginning Section -->
+        <section id="fhir-beginning" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🔥 HL7 FHIR: The Beginning</h2>
+
+            <div class="content-box">
+              <ul>
+                <li><strong>Started from scratch</strong> — a clean break from the complexity of HL7 v3.</li>
+                <li><strong>Web technologies:</strong> Built for the RESTful world — HTTP verbs (GET, PUT, POST, etc.) acting on Resources.</li>
+                <li><strong>Inspired</strong> by the <a href="https://github.com/basecamp/highrise-api" target="_blank" style="color: var(--brand-accent);">Basecamp Highrise API</a> — simple and straightforward.</li>
+                <li style="margin-bottom:0;"><strong>Resources for Health</strong> — modeling healthcare concepts as addressable web resources.</li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">🔤 FHIR Acronym</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🏥 Healthcare</h3>
+                <p style="font-size:14px; margin-bottom:0;">A modern, web-based approach to healthcare data exchange.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🔗 Interoperability</h3>
+                <p style="font-size:14px; margin-bottom:0;">A RESTful API architecture with JSON/XML format support, designed to connect disparate systems.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📦 Resources</h3>
+                <p style="font-size:14px; margin-bottom:0;">Address resources on the internet — like resources from the REST world. View, download, search.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">⚡ Fast</h3>
+                <p style="font-size:14px; margin-bottom:0;">Not necessarily quick for data exchange, but <strong>fast to adopt</strong> — pick up &amp; learn, and quickly become proficient. Integrating with V2 &amp; V3 can take weeks; with FHIR it's relatively faster.</p>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🥜 FHIR in a Nutshell</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🏛️</span>
+                <strong>Standard from HL7</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🧱</span>
+                <strong>Resources are the Basic Building Blocks</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🆓</span>
+                <strong>Free and Open</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🚀</span>
+                <strong>Latest Released Version is R5</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FHIR Five Things, Manifesto & Paradigms Section -->
+        <section id="fhir-five-things" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">⭐ FHIR: Five Things, Manifesto &amp; Paradigms</h2>
+
+            <h3 class="subsection-header">5️⃣ FHIR: Five Things</h3>
+            <div class="content-box">
+              <p>FHIR is a free and open standard for health interoperability, based on modern approaches. It consists of <strong>FIVE THINGS</strong>:</p>
+              <div class="grid-2" style="margin-bottom:0;">
+                <ul style="padding-left:18px; font-size:14px;">
+                  <li><strong>Data Model:</strong> A robust data model for describing health and administrative data.</li>
+                  <li><strong>RESTful API:</strong> A RESTful API for interacting with that data using either JSON or XML.</li>
+                  <li><strong>Open Source Tools:</strong> A set of open source tools to implement and test FHIR applications.</li>
+                </ul>
+                <ul style="padding-left:18px; font-size:14px;">
+                  <li><strong>FHIR Servers:</strong> A collection of FHIR servers around the world that you can interact with.</li>
+                  <li><strong>Community:</strong> A community of implementers working together.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">📜 The FHIR Manifesto</h3>
+            <div class="content-box">
+              <ul style="margin-bottom:0;">
+                <li><strong>Focus on Implementers:</strong> Developers, not clinicians.</li>
+                <li><strong>Target support for common scenarios:</strong> V3 tried to cover all use cases — FHIR doesn't.</li>
+                <li><strong>Follows the 80-20 Rule:</strong> 80% — the spec covers what is needed by 80% of systems; 20% — easy to extend for custom use cases.</li>
+                <li><strong>Leverage cross-industry web technologies.</strong></li>
+                <li><strong>Require human readability</strong> as a base level of interoperability.</li>
+                <li><strong>Make content freely available.</strong></li>
+                <li><strong>Support multiple paradigms &amp; architectures.</strong></li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">🔀 FHIR Paradigms</h3>
+            <p style="margin-bottom: 16px;">FHIR supports 4 paradigms:</p>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🌐 REST</h3>
+                <p style="font-size:14px; margin-bottom:0;">Lightweight, leverages the web stack.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">📄 Documents</h3>
+                <p style="font-size:14px; margin-bottom:0;">Long-term persistence.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">✉️ Messages</h3>
+                <p style="font-size:14px; margin-bottom:0;">Request/response paradigm.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🧰 Services</h3>
+                <p style="font-size:14px; margin-bottom:0;">Other SOA-based interfaces.</p>
+              </div>
+            </div>
+            <div class="content-box" style="margin-bottom:0; text-align:center;">
+              <p style="margin-bottom:0;">Regardless of approach, <strong>content stays the same</strong> — the same models and profiles can be leveraged everywhere.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- FHIR Resources Section -->
+        <section id="resources" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">📦 FHIR Resources</h2>
+
+            <h3 class="subsection-header">📍 What is a Resource?</h3>
+            <div class="content-box">
+              <p>A resource is an entity that:</p>
+              <ul style="margin-bottom:0;">
+                <li>Has a known identity (a URL) by which it can be addressed.</li>
+                <li>Identifies itself as one of the types of resource defined in this specification.</li>
+                <li>Contains a set of structured data items as described by the definition of the resource type.</li>
+                <li>Has an identified version that changes if the contents of the resource change.</li>
+              </ul>
+            </div>
+
+            <h3 class="subsection-header">🧩 "Resources" Are...</h3>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🔹</span>
+                <strong>Small, Logically Discrete Units of Exchange</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🎯</span>
+                <strong>Defined Behavior &amp; Meaning</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🏷️</span>
+                <strong>Known Identity / Location</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">⚛️</span>
+                <strong>Smallest Unit of Transaction</strong>
+              </div>
+              <div class="content-box" style="margin-bottom:0; text-align:center; grid-column: span 1;">
+                <span style="font-size:24px; display:block; margin-bottom:10px;">🩺</span>
+                <strong>"Of Interest" to Healthcare</strong>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">📋 Resource Examples &amp; Non-Examples</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0; color: var(--brand-accent);">✅ Examples</h3>
+                <ul style="font-size:14px;">
+                  <li>Patient, Practitioner, Organization</li>
+                  <li>Location, Coverage, Invoice</li>
+                  <li>AllergyIntolerance, Condition, FamilyHistory, CarePlan</li>
+                  <li>Bundle, Binary, Composition</li>
+                </ul>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0; color:#f43f5e;">❌ Non-Examples</h3>
+                <ul style="font-size:14px;">
+                  <li><strong>Gender:</strong> Too Small</li>
+                  <li><strong>Electronic Health Record:</strong> Too Big</li>
+                  <li><strong>Blood Pressure:</strong> Too Specific</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🗂️ Data Model — ~150 Resources</h3>
+            <div class="content-box">
+              <p>FHIR defines a set of roughly <strong>150 resources</strong>. These are the building blocks of the specification — examples include:</p>
+              <ul>
+                <li><strong>Patient</strong> — the person who receives healthcare.</li>
+                <li><strong>Encounter</strong> — a doctor's appointment or hospital stay.</li>
+                <li><strong>Observation</strong> — e.g. a device reading, or lab value.</li>
+                <li><strong>DiagnosticReport</strong> — e.g. a whole lab or X-ray report.</li>
+                <li><strong>MedicationPrescription</strong> — Rx for meds.</li>
+              </ul>
+              <p style="margin-bottom:0;"><a href="https://hl7.org/fhir/R4/patient.html" target="_blank" style="color: var(--brand-accent);">hl7.org/fhir/R4/patient.html &rarr;</a></p>
+            </div>
+
+            <h3 class="subsection-header">🧬 FHIR Resource Anatomy</h3>
+            <div class="grid-2">
+              <div class="resource-stack" style="margin-bottom:0;">
+                <div class="res-title">Resource</div>
+                <div class="res-row">Metadata</div>
+                <div class="res-row">Extensions</div>
+                <div class="res-row">Narrative</div>
+                <div class="res-row" style="background: linear-gradient(180deg, #f8fafc, #cbd5e1);">Body</div>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <ul style="margin-bottom:0;">
+                  <li><strong>Metadata:</strong> Essential details about the resource like version, creation date, and status.</li>
+                  <li><strong>Extensions:</strong> Custom fields to add extra data without breaking FHIR compliance.</li>
+                  <li><strong>Narrative:</strong> Human-readable summary of the resource, usually in HTML.</li>
+                  <li><strong>Body:</strong> Core structured data defining the resource's main content.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Data Types & Encodings Section -->
+        <section id="data-types" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🔤 FHIR Data Types &amp; Encodings</h2>
+
+            <h3 class="subsection-header">📑 FHIR Encoding: JSON — Resource Overview</h3>
+            <div class="content-box">
+              <pre class="code-block">{
+  <span class="ck">"resourceType"</span>: <span class="cs">"Observation"</span>,
+  <span class="ck">"id"</span>: <span class="cs">"287"</span>,
+  <span class="ck">"meta"</span>: {                                  <span class="cn">// ← Metadata</span>
+    <span class="ck">"versionId"</span>: <span class="cs">"2"</span>
+  },
+  <span class="ck">"extension"</span>: [{                           <span class="cn">// ← Extensions</span>
+    <span class="ck">"url"</span>: <span class="cs">"http://uhn.ca/fhir/readings#context"</span>,
+    <span class="ck">"valueCode"</span>: <span class="cs">"BREAKFAST"</span>
+  }],
+  <span class="ck">"text"</span>: {                                  <span class="cn">// ← Narrative</span>
+    <span class="ck">"div"</span>: <span class="cs">"&lt;div&gt;Fasting glucose of &lt;b&gt;11.2 mg/dl&lt;/b&gt;&lt;/div&gt;"</span>
+  },
+  <span class="ck">"status"</span>: <span class="cs">"final"</span>,                       <span class="cn">// ← Structured Data</span>
+  <span class="ck">"code"</span>: {
+    <span class="ck">"coding"</span>: [{
+      <span class="ck">"system"</span>: <span class="cs">"http://loinc.org"</span>,
+      <span class="ck">"code"</span>: <span class="cs">"41604-0"</span>,
+      <span class="ck">"display"</span>: <span class="cs">"Fasting glucose [Mass/volume] in Capillary blood by Glucometer"</span>
+    }]
+  },
+  <span class="ck">"subject"</span>: {
+    <span class="ck">"reference"</span>: <span class="cs">"Patient/1"</span>
+  }
+}</pre>
+              <p style="margin-bottom:0; font-size:13px; color: var(--text-muted);">This <code>Observation</code> resource shows the four anatomy parts in practice: <strong>meta</strong> (Metadata), <strong>extension</strong> (Extensions), <strong>text</strong> (Narrative), and the rest of the resource body (Structured Data).</p>
+            </div>
+
+            <h3 class="subsection-header">🔢 Data Types: Primitives</h3>
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr><th width="25%">Type</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>string</strong></td><td>Patient is awake</td></tr>
+                  <tr><td><strong>boolean</strong></td><td>true</td></tr>
+                  <tr><td><strong>date</strong></td><td>2016-02-19</td></tr>
+                  <tr><td><strong>decimal</strong></td><td>12.347000</td></tr>
+                  <tr><td><strong>integer</strong></td><td>500</td></tr>
+                  <tr><td><strong>uri</strong></td><td>http://snomed.info/sct</td></tr>
+                  <tr><td><strong>base64Binary</strong></td><td>64rwr3909h=</td></tr>
+                  <tr><td><strong>dateTime</strong></td><td>2015-01-26T15:33:13-05:00</td></tr>
+                  <tr><td><strong>instant</strong></td><td>2015-01-26T15:33:13.099-05:00</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 class="subsection-header">🧩 General Purpose Data Types (Composite)</h3>
+            <div class="content-box">
+              <p>General purpose datatypes are mini structures that are reused in different parts of the model.</p>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Quantity</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">CodeableConcept</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Reference</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Identifier</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Period</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Range</div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429; text-align:center;">Ratio</div>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🗃️ FHIR Encodings</h3>
+            <p style="margin-bottom:16px;">FHIR defines 3 encodings:</p>
+            <div class="grid-3">
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🟦 JSON</h3>
+                <p style="font-size:14px; margin-bottom:0;">The most popular format, popular with modern internet APIs.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🟧 XML</h3>
+                <p style="font-size:14px; margin-bottom:0;">Still very popular with great tools available.</p>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">🟪 RDF/Turtle</h3>
+                <p style="font-size:14px; margin-bottom:0;">Only generally used in some research contexts.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FHIR Releases Section -->
+        <section id="releases" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🚀 FHIR Releases</h2>
+
+            <div class="data-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Release Name</th>
+                    <th>Version Number</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>DSTU1</strong></td><td>0.0.82</td><td>Released in 2014. Very little use today.</td></tr>
+                  <tr><td><strong>DSTU2</strong></td><td>1.0.2</td><td>Released in 2015. Widely used in USA.</td></tr>
+                  <tr><td><strong>R3</strong></td><td>3.0.2</td><td>Released in 2017. Very little use in Europe.</td></tr>
+                  <tr><td><strong>R4</strong></td><td>4.0.1</td><td>Released in 2018. Most new projects use this version as it is the latest release. Specified in new US Regs.</td></tr>
+                  <tr><td><strong>R5</strong></td><td>v5.0.0: R5 - STU</td><td>This is the current published version.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer class="footer">
+      &copy; 2026 Healthcare COE | Mindbowser Documentation
+    </footer>
+  </div>
+
+  <script>
+    // Landing page transition
+    function startJourney() {
+      const landing = document.getElementById('landing-page');
+      const layout = document.getElementById('app-layout');
+
+      landing.style.opacity = '0';
+      setTimeout(() => {
+        landing.style.display = 'none';
+        layout.classList.add('active');
+      }, 500);
+    }
+
+    // Theme Toggle Functionality
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-btn');
+
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeBtn.innerHTML = '🌙 Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '☀️ Light Mode';
+      }
+    }
+
+    // Scroll spy for sidebar links
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.sidebar a');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 100) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // Smooth scroll click handler
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetSection = document.getElementById(targetId);
+          window.scrollTo({
+            top: targetSection.offsetTop - 60,
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
