@@ -1337,6 +1337,104 @@
           </div>
         </section>
 
+        <!-- REST APIs & Hands-On Section -->
+        <section id="rest-api" class="section bg-2">
+          <div class="section-container">
+            <h2 class="section-header">🔌 REST APIs &amp; Hands-On</h2>
+
+            <h3 class="subsection-header">🌐 Anatomy of a FHIR URL</h3>
+            <div class="content-box">
+              <pre class="code-block">http://hapi.fhir.org/baseR4/Patient/example
+└──────────┬──────────┘└───┬───┘└───┬───┘
+       <span class="cn">Base URL</span>          <span class="cn">Type</span>      <span class="cn">ID</span></pre>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="content-box" style="margin-bottom:0; background:#1a1429;">
+                  <strong>Base URL</strong>
+                  <p style="margin-bottom:0; font-size:13px;">The root address of the FHIR server — e.g. <code>http://hapi.fhir.org/baseR4</code></p>
+                </div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429;">
+                  <strong>Type</strong>
+                  <p style="margin-bottom:0; font-size:13px;">The resource type being requested — e.g. <code>Patient</code></p>
+                </div>
+                <div class="content-box" style="margin-bottom:0; background:#1a1429;">
+                  <strong>ID</strong>
+                  <p style="margin-bottom:0; font-size:13px;">The unique identifier of a specific resource instance — e.g. <code>example</code></p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">📄 Example: Patient Resource (JSON)</h3>
+            <div class="content-box">
+              <pre class="code-block">{
+  <span class="ck">"resourceType"</span>: <span class="cs">"Patient"</span>,
+  <span class="ck">"id"</span>: <span class="cs">"example"</span>,
+  <span class="ck">"text"</span>: {
+    <span class="ck">"status"</span>: <span class="cs">"generated"</span>,
+    <span class="ck">"div"</span>: <span class="cs">"&lt;div&gt;John Doe&lt;/div&gt;"</span>
+  },
+  <span class="ck">"identifier"</span>: [{
+    <span class="ck">"use"</span>: <span class="cs">"usual"</span>,
+    <span class="ck">"type"</span>: {
+      <span class="ck">"coding"</span>: [{
+        <span class="ck">"system"</span>: <span class="cs">"http://terminology.hl7.org/CodeSystem/v2-0203"</span>,
+        <span class="ck">"code"</span>: <span class="cs">"MR"</span>
+      }]
+    },
+    <span class="ck">"system"</span>: <span class="cs">"urn:oid:1.2.36.146.595.217.0.1"</span>,
+    <span class="ck">"value"</span>: <span class="cs">"12345"</span>
+  }],
+  <span class="ck">"name"</span>: [{
+    <span class="ck">"use"</span>: <span class="cs">"official"</span>,
+    <span class="ck">"family"</span>: <span class="cs">"Doe"</span>,
+    <span class="ck">"given"</span>: [<span class="cs">"John"</span>]
+  }],
+  <span class="ck">"gender"</span>: <span class="cs">"male"</span>,
+  <span class="ck">"birthDate"</span>: <span class="cs">"1948-02-03"</span>
+}</pre>
+            </div>
+
+            <h3 class="subsection-header">🔁 CRUD Operations</h3>
+            <div class="grid-2">
+              <div class="content-box" style="margin-bottom:0;">
+                <pre class="code-block" style="margin-bottom:0;"><span class="ck">GET</span> /Patient/123
+<span class="cs">POST</span> /Patient
+<span class="cn">PUT</span> /Patient/123
+<span class="ck">DELETE</span> /Patient/123</pre>
+              </div>
+              <div class="content-box" style="margin-bottom:0;">
+                <ul style="margin-bottom:0;">
+                  <li><strong>GET</strong> — Read a resource (Create-Read-Update-Delete: <em>Read</em>)</li>
+                  <li><strong>POST</strong> — Create a new resource (<em>Create</em>)</li>
+                  <li><strong>PUT</strong> — Update an existing resource (<em>Update</em>)</li>
+                  <li><strong>DELETE</strong> — Remove a resource (<em>Delete</em>)</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="subsection-header">🛠️ Hands-On Exercise</h3>
+            <div class="content-box" style="margin-bottom:0;">
+              <p>Access the public HAPI FHIR server:</p>
+              <p><a href="http://hapi.fhir.org/baseR4" target="_blank" style="color: var(--brand-accent);">http://hapi.fhir.org/baseR4 &rarr;</a></p>
+              <p>Example queries:</p>
+              <ul style="margin-bottom:0;">
+                <li><code>GET /Patient/example</code></li>
+                <li><code>GET /Patient?name=Smith</code></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Thank You Section -->
+        <section id="thanks" class="section bg-1">
+          <div class="section-container">
+            <h2 class="section-header">🙏 Thank You</h2>
+            <div class="content-box" style="text-align:center; margin-bottom:0;">
+              <p style="font-size:22px; font-weight:600; margin-bottom:8px;">Thanks for completing the HL7 FHIR Basics module!</p>
+              <p style="margin-bottom:0; color: var(--text-muted);">You now have a foundation in the history of healthcare data standards, the evolution from HL7 V2 to V3 to FHIR, FHIR's core resources, data types, encodings, and REST API model — the building blocks for interoperability.</p>
+            </div>
+          </div>
+        </section>
+
       </main>
     </div>
 
